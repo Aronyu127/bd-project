@@ -97,7 +97,7 @@
 
       <!-- 頂部資訊列 -->
       <div class="game-topbar">
-        <!-- 左：分數 + 連擊 -->
+        <!-- 左：分數 -->
         <div class="topbar-score-wrap">
           <div class="topbar-score-value" id="display-score">0</div>
           <div class="topbar-score-label">積分</div>
@@ -114,6 +114,11 @@
         </div>
       </div>
 
+      <!-- 題目總進度條 -->
+      <div class="question-progress-bar-wrap">
+        <div class="question-progress-bar" id="question-progress-bar"></div>
+      </div>
+
       <!-- 獎品進度列 -->
       <div class="game-prize-bar">
         <div class="prize-bar-left">
@@ -125,7 +130,6 @@
           </div>
         </div>
         <div class="prize-bar-right">
-          <span class="prize-bar-next" id="display-next-prize">—</span>
           <span class="prize-bar-threshold" id="display-threshold"></span>
         </div>
       </div>
@@ -177,18 +181,34 @@
     <div class="confetti-container" id="confetti-container"></div>
     <div class="unlock-card card">
       <div class="unlock-trophy">🏆</div>
-      <h2 class="unlock-title">🎉 恭喜解鎖！</h2>
-      <div class="unlock-prize-card">
-        <img class="unlock-prize-img" id="unlock-prize-img" src="" alt="">
-        <div class="unlock-prize-icon" id="unlock-prize-icon">🎁</div>
-        <div class="unlock-prize-name" id="unlock-prize-name"></div>
+      <h2 class="unlock-title">🎉 新獎品解鎖！</h2>
+
+      <!-- 拆禮物區：先顯示禮物盒，點擊後翻轉揭曉 -->
+      <div class="gift-flip-wrap" id="gift-flip-wrap">
+        <div class="gift-flip-inner" id="gift-flip-inner">
+          <!-- 正面：禮物盒 -->
+          <div class="gift-front">
+            <div class="gift-box-emoji">🎁</div>
+            <div class="gift-tap-hint">點我打開！</div>
+          </div>
+          <!-- 背面：獎品揭曉 -->
+          <div class="gift-back">
+            <img class="unlock-prize-img" id="unlock-prize-img" src="" alt="">
+            <div class="unlock-prize-icon" id="unlock-prize-icon">🎁</div>
+            <div class="unlock-prize-name" id="unlock-prize-name"></div>
+          </div>
+        </div>
       </div>
-      <div class="unlock-score-wrap">
-        <span class="unlock-score-label">目前總分</span>
-        <span class="unlock-score-value" id="unlock-score"></span>
+
+      <!-- 分數與訊息（拆開後才顯示） -->
+      <div class="unlock-reveal-content" id="unlock-reveal-content" style="display:none">
+        <div class="unlock-score-wrap">
+          <span class="unlock-score-label">目前總分</span>
+          <span class="unlock-score-value" id="unlock-score"></span>
+        </div>
+        <p class="unlock-message" id="unlock-message"></p>
+        <button id="btn-continue" class="btn btn-primary btn-large">繼續挑戰 🎮</button>
       </div>
-      <p class="unlock-message" id="unlock-message"></p>
-      <button id="btn-continue" class="btn btn-primary btn-large">繼續挑戰 🎮</button>
     </div>
   </div>
 
@@ -220,6 +240,7 @@
       <div class="result-message-wrap">
         <p class="result-message" id="result-message"></p>
       </div>
+      <button id="btn-restart" class="btn btn-restart btn-large">再挑戰一次 🔄</button>
     </div>
   </div>
 
