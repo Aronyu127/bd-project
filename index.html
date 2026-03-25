@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🎂 高靖婷生日大挑戰</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- ===== 起始頁 ===== -->
+  <div id="screen-start" class="screen active">
+    <div class="birthday-bg-deco">
+      <span class="deco-balloon">🎈</span>
+      <span class="deco-balloon">🎀</span>
+      <span class="deco-star">✨</span>
+      <span class="deco-star">⭐</span>
+      <span class="deco-balloon">🎊</span>
+    </div>
+    <div class="start-card card">
+      <!-- 壽星照片區 -->
+      <div class="start-photo-wrap">
+        <img class="start-photo" src="assets/images/birthday-star.jpg" alt="壽星照片"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="start-photo-placeholder">
+          <span>📸</span>
+          <span>放壽星照片</span>
+          <span class="photo-hint">assets/images/birthday-star.jpg</span>
+        </div>
+      </div>
+      <h1 class="start-title">高靖婷生日大挑戰</h1>
+      <p class="start-subtitle">今天的獎品要靠妳自己贏回去<br>準備好迎接這場專屬於妳的冒險了嗎？</p>
+      <form id="form-start" class="start-form">
+        <div class="form-group">
+          <label id="label-q1"></label>
+          <input type="text" id="input-q1" autocomplete="off">
+          <span class="form-error" id="error-q1"></span>
+        </div>
+        <div class="form-group">
+          <label id="label-q2"></label>
+          <input type="text" id="input-q2" autocomplete="off">
+          <span class="form-error" id="error-q2"></span>
+        </div>
+        <button type="submit" class="btn btn-primary btn-large">
+          <span>準備好了！</span>
+          <span class="btn-sparkle">✨</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== 說明頁 ===== -->
+  <div id="screen-intro" class="screen">
+    <div class="intro-card card">
+      <div class="intro-emoji">📖</div>
+      <h2 class="intro-title">遊戲說明</h2>
+      <div class="intro-rules">
+        <div class="rule-item">
+          <span class="rule-icon">❓</span>
+          <span>共 <strong>20 題</strong>，每題 4 個選項</span>
+        </div>
+        <div class="rule-item">
+          <span class="rule-icon">⏱️</span>
+          <span>每題限時 <strong>15 秒</strong>，超時視同答錯</span>
+        </div>
+        <div class="rule-item">
+          <span class="rule-icon">💎</span>
+          <span>答對得分，答錯 / 超時 <strong>不扣分</strong></span>
+        </div>
+        <div class="rule-item">
+          <span class="rule-icon">🔥</span>
+          <span>連續答對有<strong>額外加成</strong>分數！</span>
+        </div>
+        <div class="rule-item">
+          <span class="rule-icon">🎁</span>
+          <span>累積積分可逐步<strong>解鎖 6 個獎品</strong></span>
+        </div>
+        <div class="rule-item">
+          <span class="rule-icon">⭐</span>
+          <span>第 20 題為<strong>最終挑戰題</strong>，分數加倍！</span>
+        </div>
+      </div>
+      <div class="intro-note">
+        <p>✨ 妳每答對一題，就離驚喜更近一點</p>
+        <p class="intro-disclaimer">本活動內容保有最終解釋權，所有獎品需配合主辦人兌換</p>
+      </div>
+      <button id="btn-agree" class="btn btn-primary btn-large">
+        <span>我同意，開始挑戰！</span>
+        <span class="btn-sparkle">🚀</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== 遊戲頁 ===== -->
+  <div id="screen-game" class="screen">
+    <div class="game-layout">
+
+      <!-- 頂部資訊列 -->
+      <div class="game-topbar">
+        <!-- 左：分數 + 連擊 -->
+        <div class="topbar-score-wrap">
+          <div class="topbar-score-value" id="display-score">0</div>
+          <div class="topbar-score-label">積分</div>
+        </div>
+        <!-- 中：角色 + 進度 -->
+        <div class="topbar-center">
+          <div class="topbar-character" id="character-emoji">🐱</div>
+          <div class="topbar-progress">第 <span id="display-q-num">1</span>/20 題</div>
+        </div>
+        <!-- 右：連擊 -->
+        <div class="topbar-streak-wrap">
+          <div class="topbar-streak-value" id="display-streak">0</div>
+          <div class="topbar-streak-label">🔥 連擊</div>
+        </div>
+      </div>
+
+      <!-- 獎品進度列 -->
+      <div class="game-prize-bar">
+        <div class="prize-bar-left">
+          <span class="prize-bar-current" id="display-current-prize">尚未解鎖</span>
+        </div>
+        <div class="prize-bar-mid">
+          <div class="prize-bar-progress-wrap">
+            <div class="prize-bar-progress" id="progress-bar"></div>
+          </div>
+        </div>
+        <div class="prize-bar-right">
+          <span class="prize-bar-next" id="display-next-prize">—</span>
+          <span class="prize-bar-threshold" id="display-threshold"></span>
+        </div>
+      </div>
+
+      <!-- 主答題區 -->
+      <main class="game-main">
+        <div class="question-card card" id="question-card">
+          <!-- 最終挑戰題標記 -->
+          <div class="final-badge" id="final-badge" style="display:none">⚡ 最終挑戰題 ⚡</div>
+
+          <!-- 計時器 -->
+          <div class="timer-wrap">
+            <svg class="timer-svg" viewBox="0 0 36 36" id="timer-svg">
+              <circle class="timer-bg" cx="18" cy="18" r="15.9"/>
+              <circle class="timer-circle" cx="18" cy="18" r="15.9" id="timer-circle"/>
+            </svg>
+            <div class="timer-text" id="timer-text">15</div>
+          </div>
+
+          <!-- 題目 -->
+          <div class="question-image-wrap" id="question-image-wrap" style="display:none">
+            <img id="question-image" src="" alt="題目圖片">
+          </div>
+          <div class="question-text" id="question-text"></div>
+
+          <!-- 選項 -->
+          <div class="options-grid" id="options-grid">
+            <button class="option-btn" data-index="0"></button>
+            <button class="option-btn" data-index="1"></button>
+            <button class="option-btn" data-index="2"></button>
+            <button class="option-btn" data-index="3"></button>
+          </div>
+
+          <!-- 即時回饋 -->
+          <div class="feedback-area" id="feedback-area" style="display:none">
+            <div class="feedback-icon" id="feedback-icon"></div>
+            <div class="feedback-text" id="feedback-text"></div>
+            <div class="feedback-score" id="feedback-score"></div>
+            <div class="feedback-streak" id="feedback-streak"></div>
+          </div>
+        </div>
+      </main>
+
+    </div>
+  </div>
+
+  <!-- ===== 恭喜解鎖頁 ===== -->
+  <div id="screen-unlock" class="screen">
+    <div class="confetti-container" id="confetti-container"></div>
+    <div class="unlock-card card">
+      <div class="unlock-trophy">🏆</div>
+      <h2 class="unlock-title">🎉 恭喜解鎖！</h2>
+      <div class="unlock-prize-card">
+        <img class="unlock-prize-img" id="unlock-prize-img" src="" alt="">
+        <div class="unlock-prize-icon" id="unlock-prize-icon">🎁</div>
+        <div class="unlock-prize-name" id="unlock-prize-name"></div>
+      </div>
+      <div class="unlock-score-wrap">
+        <span class="unlock-score-label">目前總分</span>
+        <span class="unlock-score-value" id="unlock-score"></span>
+      </div>
+      <p class="unlock-message" id="unlock-message"></p>
+      <button id="btn-continue" class="btn btn-primary btn-large">繼續挑戰 🎮</button>
+    </div>
+  </div>
+
+  <!-- ===== 結算頁 ===== -->
+  <div id="screen-result" class="screen">
+    <div class="confetti-container" id="confetti-container-result"></div>
+    <div class="result-card card">
+      <div class="result-title-wrap">
+        <div class="result-emoji">🎂</div>
+        <h2 class="result-title">生日快樂！</h2>
+        <p class="result-player-name" id="result-player-name"></p>
+      </div>
+      <div class="result-score-big">
+        <div class="result-score-label">最終得分</div>
+        <div class="result-score-num" id="result-score">0</div>
+      </div>
+      <div class="result-final-prize-wrap">
+        <div class="result-final-prize-label">🎁 妳贏到的獎品</div>
+        <div class="result-final-prize-card">
+          <img class="result-final-prize-img" id="result-final-prize-img" src="" alt="">
+          <div class="result-final-prize-icon" id="result-final-prize-icon">🎁</div>
+          <div class="result-final-prize-name" id="result-final-prize-name">尚未解鎖</div>
+        </div>
+      </div>
+      <div class="result-unlocked-wrap">
+        <div class="result-unlocked-label">解鎖紀錄</div>
+        <div class="result-unlocked-list" id="result-unlocked-list"></div>
+      </div>
+      <div class="result-message-wrap">
+        <p class="result-message" id="result-message"></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/questions.js"></script>
+  <script src="assets/js/game.js"></script>
+</body>
+</html>

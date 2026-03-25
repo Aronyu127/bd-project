@@ -1,0 +1,971 @@
+/* ===================================================
+   生日大挑戰 - 甜美生日系配色
+   =================================================== */
+
+/* ── CSS 變數 ── */
+:root {
+  --pink: #ff9de2;
+  --pink-light: #ffe4f5;
+  --pink-dark: #e05dbd;
+  --purple: #c9b8ff;
+  --purple-light: #ede8ff;
+  --cream: #fff8f0;
+  --gold: #f5c842;
+  --gold-dark: #d4a017;
+  --white: #fff;
+  --text: #5a3a5a;
+  --text-light: #9a7a9a;
+  --correct: #5dde8a;
+  --wrong: #ff6b6b;
+  --shadow: 0 8px 32px rgba(200, 100, 180, 0.18);
+  --radius: 20px;
+  --radius-sm: 12px;
+}
+
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; min-height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "PingFang TC", sans-serif;
+  background: linear-gradient(135deg, #ffe4f5 0%, #ede8ff 50%, #fff8f0 100%);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* ── Screen System ── */
+.screen {
+  display: none;
+  min-height: 100vh;
+  width: 100%;
+  animation: fadeIn 0.4s ease;
+}
+.screen.active { display: flex; align-items: center; justify-content: center; padding: 20px; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Card ── */
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 32px 28px;
+  width: 100%;
+  max-width: 480px;
+}
+
+/* ===================================================
+   起始頁
+   =================================================== */
+
+#screen-start {
+  position: relative;
+  overflow: hidden;
+}
+
+.birthday-bg-deco {
+  position: fixed;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  top: 0; left: 0;
+}
+
+.deco-balloon, .deco-star {
+  position: absolute;
+  font-size: 2.4rem;
+  animation: float 4s ease-in-out infinite;
+  opacity: 0.35;
+}
+.deco-balloon:nth-child(1) { top: 5%;  left: 8%;  animation-delay: 0s; }
+.deco-balloon:nth-child(2) { top: 12%; right: 8%; animation-delay: 1.2s; font-size: 2rem; }
+.deco-star:nth-child(3)    { top: 30%; left: 4%;  animation-delay: 0.6s; font-size: 1.6rem; }
+.deco-star:nth-child(4)    { top: 20%; right: 12%;animation-delay: 1.8s; font-size: 1.4rem; }
+.deco-balloon:nth-child(5) { bottom: 15%; left: 12%;animation-delay: 2.4s; font-size: 2.2rem; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(-5deg); }
+  50%       { transform: translateY(-14px) rotate(5deg); }
+}
+
+.start-card {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+/* 壽星照片 */
+.start-photo-wrap {
+  margin: 0 auto 16px;
+  width: 130px;
+  height: 130px;
+  position: relative;
+}
+
+.start-photo {
+  width: 130px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid var(--pink);
+  box-shadow: 0 4px 20px rgba(255, 157, 226, 0.45);
+  display: block;
+}
+
+.start-photo-placeholder {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 3px dashed var(--pink);
+  background: var(--pink-light);
+  font-size: 0.7rem;
+  color: var(--text-light);
+  gap: 2px;
+  text-align: center;
+  padding: 8px;
+}
+
+.start-photo-placeholder span:first-child { font-size: 2rem; }
+
+.photo-hint {
+  font-size: 0.6rem;
+  color: #c0a0c0;
+  word-break: break-all;
+}
+
+.start-emoji {
+  font-size: 3.5rem;
+  margin-bottom: 8px;
+  animation: bounce 1.8s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+.start-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--pink-dark);
+  margin-bottom: 8px;
+  letter-spacing: 0.04em;
+}
+
+.start-subtitle {
+  color: var(--text-light);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.start-form { text-align: left; }
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--pink-dark);
+  margin-bottom: 6px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--pink-light);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--cream);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+  border-color: var(--pink);
+  background: var(--white);
+}
+
+.form-error {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--wrong);
+  margin-top: 4px;
+  min-height: 1.2em;
+}
+
+/* ===================================================
+   說明頁
+   =================================================== */
+
+.intro-card { text-align: center; }
+
+.intro-emoji {
+  font-size: 3rem;
+  margin-bottom: 8px;
+}
+
+.intro-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--pink-dark);
+  margin-bottom: 20px;
+}
+
+.intro-rules {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.rule-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--pink-light);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.rule-item:last-child { border-bottom: none; }
+.rule-icon { font-size: 1.2rem; flex-shrink: 0; }
+
+.intro-note {
+  background: var(--pink-light);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 24px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--pink-dark);
+}
+
+.intro-disclaimer {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  margin-top: 6px;
+}
+
+/* ===================================================
+   按鈕
+   =================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--pink) 0%, var(--pink-dark) 100%);
+  color: var(--white);
+  padding: 14px 28px;
+  box-shadow: 0 4px 16px rgba(224, 93, 189, 0.35);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 24px rgba(224, 93, 189, 0.45);
+}
+
+.btn-primary:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-large {
+  width: 100%;
+  padding: 16px 28px;
+  font-size: 1.1rem;
+}
+
+.btn-sparkle {
+  font-size: 1.2rem;
+  animation: sparkle 1.5s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50%       { transform: scale(1.3) rotate(20deg); }
+}
+
+/* ===================================================
+   遊戲頁 — 手機優先單欄版型
+   =================================================== */
+
+#screen-game {
+  align-items: flex-start;
+  padding: 0;
+  background: linear-gradient(160deg, #ffe4f5 0%, #ede8ff 60%, #fff8f0 100%);
+}
+
+.game-layout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 540px;
+  min-height: 100vh;
+  margin: 0 auto;
+}
+
+/* ── 頂部資訊列 ── */
+.game-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, var(--pink) 0%, var(--pink-dark) 100%);
+  padding: 10px 16px;
+  gap: 8px;
+  box-shadow: 0 2px 12px rgba(224, 93, 189, 0.25);
+}
+
+.topbar-score-wrap {
+  text-align: center;
+  min-width: 60px;
+}
+
+.topbar-score-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1;
+  transition: transform 0.2s;
+}
+
+.topbar-score-value.bump {
+  animation: scoreBump 0.3s ease;
+}
+
+@keyframes scoreBump {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+.topbar-score-label {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.8);
+  margin-top: 1px;
+}
+
+.topbar-center {
+  flex: 1;
+  text-align: center;
+}
+
+.topbar-character {
+  font-size: 2rem;
+  line-height: 1;
+  transition: all 0.3s;
+}
+
+.topbar-progress {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.85);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.topbar-streak-wrap {
+  text-align: center;
+  min-width: 60px;
+}
+
+.topbar-streak-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--gold);
+  line-height: 1;
+}
+
+.topbar-streak-label {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.8);
+  margin-top: 1px;
+}
+
+/* ── 獎品進度列 ── */
+.game-prize-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--white);
+  border-bottom: 1px solid var(--pink-light);
+}
+
+.prize-bar-left {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--gold-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 90px;
+}
+
+.prize-bar-current { display: block; }
+
+.prize-bar-mid {
+  flex: 1;
+}
+
+.prize-bar-progress-wrap {
+  background: #f0e8ff;
+  border-radius: 99px;
+  height: 7px;
+  overflow: hidden;
+}
+
+.prize-bar-progress {
+  height: 100%;
+  background: linear-gradient(90deg, var(--purple), var(--pink));
+  border-radius: 99px;
+  transition: width 0.5s ease;
+  width: 0%;
+}
+
+.prize-bar-right {
+  text-align: right;
+  max-width: 90px;
+  overflow: hidden;
+}
+
+.prize-bar-next {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.prize-bar-threshold {
+  display: block;
+  font-size: 0.65rem;
+  color: var(--text-light);
+}
+
+/* ── 主題目區 ── */
+.game-main {
+  flex: 1;
+  padding: 12px 14px 20px;
+}
+
+.question-card {
+  position: relative;
+  padding: 18px 16px;
+}
+
+/* 最終挑戰題 */
+.question-card.final-question {
+  background: linear-gradient(135deg, #1a0533 0%, #2d0a5a 50%, #1a0533 100%);
+  color: var(--white);
+  box-shadow: 0 0 40px rgba(200, 80, 255, 0.5);
+}
+
+.question-card.final-question .question-text {
+  color: var(--white);
+}
+
+.question-card.final-question .option-btn {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--white);
+  border-color: rgba(255, 200, 255, 0.4);
+}
+
+.question-card.final-question .option-btn:hover {
+  background: rgba(255, 100, 220, 0.3);
+  border-color: var(--pink);
+  box-shadow: 0 0 20px rgba(255, 100, 220, 0.4);
+}
+
+.final-badge {
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--gold);
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+  animation: finalGlow 1.5s ease-in-out infinite alternate;
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.8);
+}
+
+@keyframes finalGlow {
+  from { opacity: 0.7; text-shadow: 0 0 8px rgba(255, 215, 0, 0.6); }
+  to   { opacity: 1;   text-shadow: 0 0 20px rgba(255, 215, 0, 1); }
+}
+
+/* ── 計時器 ── */
+.timer-wrap {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+}
+
+.timer-svg {
+  width: 56px;
+  height: 56px;
+  transform: rotate(-90deg);
+}
+
+.timer-bg {
+  fill: none;
+  stroke: var(--pink-light);
+  stroke-width: 3;
+}
+
+.timer-circle {
+  fill: none;
+  stroke: var(--pink);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 100 100;
+  transition: stroke-dasharray 0.9s linear, stroke 0.3s;
+}
+
+.timer-text {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--pink-dark);
+  transition: color 0.3s;
+}
+
+.timer-svg.timer-urgent .timer-circle {
+  stroke: var(--wrong);
+  animation: timerPulse 0.5s ease-in-out infinite;
+}
+
+.timer-text.timer-urgent-text {
+  color: var(--wrong);
+  animation: timerShake 0.3s ease-in-out infinite;
+}
+
+@keyframes timerPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+
+@keyframes timerShake {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50%       { transform: translate(-50%, -50%) scale(1.15); }
+}
+
+.timer-text.timer-final-pulse {
+  animation: timerFinal 0.4s ease-in-out infinite;
+  color: var(--gold);
+}
+
+@keyframes timerFinal {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50%       { transform: translate(-50%, -50%) scale(1.3); }
+}
+
+/* ── 題目圖片 ── */
+.question-image-wrap {
+  margin-bottom: 16px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.question-image-wrap img {
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── 題目文字 ── */
+.question-text {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+/* ── 選項 ── */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.option-btn {
+  background: var(--cream);
+  border: 2px solid var(--pink-light);
+  border-radius: var(--radius-sm);
+  padding: 14px 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.15s, border-color 0.15s, transform 0.12s, box-shadow 0.15s;
+  line-height: 1.4;
+}
+
+.option-btn:hover:not(:disabled) {
+  background: var(--pink-light);
+  border-color: var(--pink);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 157, 226, 0.3);
+}
+
+.option-btn:active:not(:disabled) {
+  transform: translateY(0) scale(0.97);
+}
+
+.option-btn.correct {
+  background: #d4f7e3;
+  border-color: var(--correct);
+  color: #1a7a42;
+  animation: correctPop 0.4s ease;
+}
+
+.option-btn.wrong {
+  background: #ffe4e4;
+  border-color: var(--wrong);
+  color: #c0392b;
+  animation: wrongShake 0.4s ease;
+}
+
+@keyframes correctPop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.06); }
+  70%  { transform: scale(0.97); }
+  100% { transform: scale(1); }
+}
+
+@keyframes wrongShake {
+  0%   { transform: translateX(0); }
+  20%  { transform: translateX(-6px); }
+  40%  { transform: translateX(6px); }
+  60%  { transform: translateX(-4px); }
+  80%  { transform: translateX(4px); }
+  100% { transform: translateX(0); }
+}
+
+/* ── 回饋區 ── */
+.feedback-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px;
+  background: var(--pink-light);
+  border-radius: var(--radius-sm);
+  animation: fadeIn 0.3s ease;
+  text-align: center;
+}
+
+.feedback-icon { font-size: 2rem; }
+.feedback-text { font-weight: 700; color: var(--text); font-size: 0.95rem; }
+.feedback-score { font-size: 1.1rem; font-weight: 800; color: var(--pink-dark); }
+.feedback-streak { font-size: 0.85rem; font-weight: 700; color: var(--gold-dark); }
+
+/* ===================================================
+   恭喜解鎖頁
+   =================================================== */
+
+#screen-unlock {
+  position: relative;
+  overflow: hidden;
+}
+
+.unlock-card {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  animation: unlockPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes unlockPop {
+  from { transform: scale(0.7); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.unlock-trophy {
+  font-size: 3.5rem;
+  margin-bottom: 8px;
+  animation: trophySpin 0.6s ease 0.1s both;
+}
+
+@keyframes trophySpin {
+  from { transform: rotate(-20deg) scale(0.5); opacity: 0; }
+  to   { transform: rotate(0deg) scale(1);    opacity: 1; }
+}
+
+.unlock-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--pink-dark);
+  margin-bottom: 20px;
+}
+
+.unlock-prize-card {
+  background: linear-gradient(135deg, #fffbe8 0%, #fff5d6 100%);
+  border: 2px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 18px;
+}
+
+.unlock-prize-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid var(--gold);
+  margin: 0 auto 10px;
+  display: block;
+}
+
+.unlock-prize-icon { font-size: 3rem; margin-bottom: 8px; }
+.unlock-prize-name {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--gold-dark);
+}
+
+.unlock-score-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.unlock-score-label { font-size: 0.9rem; color: var(--text-light); }
+.unlock-score-value {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--pink-dark);
+}
+
+.unlock-message {
+  font-size: 0.95rem;
+  color: var(--text-light);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+/* ===================================================
+   結算頁
+   =================================================== */
+
+#screen-result {
+  position: relative;
+  overflow: hidden;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.result-card {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 500px;
+  animation: unlockPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.result-title-wrap { margin-bottom: 20px; }
+
+.result-emoji {
+  font-size: 3.5rem;
+  margin-bottom: 8px;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+.result-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--pink-dark);
+  margin-bottom: 4px;
+}
+
+.result-player-name {
+  font-size: 0.95rem;
+  color: var(--text-light);
+}
+
+.result-score-big {
+  background: linear-gradient(135deg, var(--pink) 0%, var(--pink-dark) 100%);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  margin-bottom: 18px;
+  color: var(--white);
+}
+
+.result-score-label { font-size: 0.85rem; opacity: 0.88; margin-bottom: 4px; }
+.result-score-num {
+  font-size: 2.8rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.result-final-prize-wrap {
+  background: linear-gradient(135deg, #fffbe8 0%, #fff5d6 100%);
+  border: 2px solid var(--gold);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  margin-bottom: 18px;
+}
+
+.result-final-prize-label {
+  font-size: 0.85rem;
+  color: var(--gold-dark);
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.result-final-prize-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.result-final-prize-img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid var(--gold);
+  flex-shrink: 0;
+}
+
+.result-final-prize-icon { font-size: 2.2rem; }
+.result-final-prize-name {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--gold-dark);
+}
+
+.result-unlocked-wrap {
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+.result-unlocked-label {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.result-unlocked-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.unlocked-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: var(--pink-light);
+  color: var(--text);
+}
+
+.unlocked-item.locked {
+  background: #f0f0f0;
+  color: #b0b0b0;
+}
+
+.unlocked-item-icon { font-size: 1.2rem; }
+
+.result-message-wrap {
+  background: var(--pink-light);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+}
+
+.result-message {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--pink-dark);
+  font-weight: 500;
+}
+
+/* ===================================================
+   彩帶特效
+   =================================================== */
+
+.confetti-container {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -20px;
+  animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+  0%   { transform: translateY(0) rotate(0deg);      opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+/* ===================================================
+   RWD
+   =================================================== */
+
+/* 桌機：遊戲頁稍微寬一點，其他頁置中 */
+@media (min-width: 600px) {
+  .game-topbar { border-radius: 0; }
+}
+
+/* 小手機：選項全部單欄 */
+@media (max-width: 400px) {
+  .options-grid { grid-template-columns: 1fr; }
+  .topbar-score-value,
+  .topbar-streak-value { font-size: 1.3rem; }
+  .topbar-character { font-size: 1.6rem; }
+}
+
+/* 確保起始/說明/結算頁在大螢幕置中 */
+#screen-start, #screen-intro, #screen-unlock, #screen-result {
+  justify-content: center;
+}
+
+#screen-start .start-card,
+#screen-intro .intro-card,
+#screen-unlock .unlock-card,
+#screen-result .result-card {
+  max-width: 480px;
+  width: 100%;
+}
