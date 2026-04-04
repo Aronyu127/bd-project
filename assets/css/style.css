@@ -587,13 +587,51 @@ html, body {
   margin-bottom: 16px;
   border-radius: var(--radius-sm);
   overflow: hidden;
+  background: #f7f3ff;
+  position: relative;
+  min-height: 140px;
 }
 
 .question-image-wrap img {
   width: 100%;
-  max-height: 220px;
-  object-fit: cover;
+  height: auto;
+  max-height: 48vh;
+  object-fit: contain;
   display: block;
+}
+
+.question-image-loader {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(247, 243, 255, 0.92);
+  color: var(--pink-dark);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.question-image-wrap.is-loading .question-image-loader {
+  display: flex;
+}
+
+.question-image-wrap.is-loading img {
+  opacity: 0.2;
+}
+
+.question-image-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(224, 93, 189, 0.25);
+  border-top-color: var(--pink-dark);
+  border-radius: 50%;
+  animation: questionImageSpin 0.9s linear infinite;
+}
+
+@keyframes questionImageSpin {
+  to { transform: rotate(360deg); }
 }
 
 /* ── 題目文字 ── */
@@ -918,6 +956,65 @@ html, body {
   line-height: 1.7;
   color: var(--pink-dark);
   font-weight: 500;
+}
+
+.result-retry-panel {
+  margin-top: 18px;
+  margin-bottom: 14px;
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  background: var(--purple-light);
+  border: 2px dashed var(--purple);
+  text-align: left;
+}
+
+.result-retry-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.result-retry-desc {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text-light);
+  margin-bottom: 12px;
+}
+
+.result-retry-conditions {
+  margin: 0 0 14px 1.1rem;
+  padding: 0;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.result-retry-conditions li { margin-bottom: 6px; }
+
+.result-retry-agree {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  margin-bottom: 14px;
+  line-height: 1.45;
+}
+
+.result-retry-agree input {
+  margin-top: 3px;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  accent-color: var(--pink-dark);
+}
+
+#btn-retry-quiz {
+  width: 100%;
+  margin-top: 0;
 }
 
 /* ===================================================

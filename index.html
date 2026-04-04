@@ -73,11 +73,15 @@
         </div>
         <div class="rule-item">
           <span class="rule-icon">🎁</span>
-          <span>累積積分可逐步<strong>解鎖 6 個獎品</strong></span>
+          <span>累積積分可逐步<strong>解鎖 5 個獎品</strong>；大獎門檻＝本場<strong>滿分積分</strong>（題題答對＋連擊加成）</span>
         </div>
         <div class="rule-item">
           <span class="rule-icon">⭐</span>
-          <span>第 20 題為<strong>最終挑戰題</strong>，分數加倍！</span>
+          <span>第 20 題為<strong>最終挑戰題</strong></span>
+        </div>
+        <div class="rule-item">
+          <span class="rule-icon">⏪</span>
+          <span>若未達滿分與大獎，結算頁可<strong>同意條件後重新回溯作答</strong></span>
         </div>
       </div>
       <div class="intro-note">
@@ -239,6 +243,16 @@
       </div>
       <div class="result-message-wrap">
         <p class="result-message" id="result-message"></p>
+      </div>
+      <div class="result-retry-panel" id="result-retry-panel" style="display:none">
+        <div class="result-retry-title">想重新回溯作答嗎？</div>
+        <p class="result-retry-desc">若這一輪未達滿分積分、沒拿到大獎，可以選擇從頭再玩一次。請先閱讀並同意以下條件：</p>
+        <ul class="result-retry-conditions" id="result-retry-conditions"></ul>
+        <label class="result-retry-agree">
+          <input type="checkbox" id="retry-agree-checkbox">
+          <span>我同意以上條件，並從第 1 題重新作答</span>
+        </label>
+        <button type="button" id="btn-retry-quiz" class="btn btn-primary btn-large" disabled>重新回溯作答 ⏪</button>
       </div>
       <button id="btn-restart" class="btn btn-restart btn-large">再挑戰一次 🔄</button>
     </div>
