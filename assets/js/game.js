@@ -35,6 +35,10 @@ function makeInitialState() {
     answerLog: [],
     gameEnded: false,
     unlockQueue: [],
+    retryMode: false,
+    retryQuestionIndexes: [],
+    retryCursor: 0,
+    pendingGrandAccept: false,
   };
 }
 
@@ -53,8 +57,19 @@ function showScreen(id) {
 
 function formatScore(n) { return n.toLocaleString(); }
 
+function normalizeAnswer(input) {
+  return (input || "").trim().toLowerCase();
+}
+
 function getGrandPrize() {
   return PRIZES[PRIZES.length - 1];
+}
+
+function getActiveQuestionIndex() {
+  if (gameState.retryMode) {
+    return gameState.retryQuestionIndexes[gameState.retryCursor];
+  }
+  return gameState.currentQ;
 }
 
 function computePerfectRunMaxScore(questionCount) {
@@ -184,7 +199,8 @@ $("btn-agree").addEventListener("click", function() {
 // ===================================================
 
 function loadQuestion() {
-  const q = QUESTIONS[gameState.currentQ];
+  const qIdx = getActiveQuestionIndex();
+  const q = QUESTIONS[qIdx];
   gameState.isAnswered = false;
   clearInterval(gameState.timerInterval);
 
@@ -257,7 +273,13 @@ function loadQuestion() {
 // ===================================================
 
 function updateQuestionProgressBar() {
-  const pct = ((gameState.currentQ) / QUESTIONS.length) * 100;
+  let pct = 0;
+  if (gameState.retryMode) {
+    const total = Math.max(1, gameState.retryQuestionIndexes.length);
+    pct = (gameState.retryCursor / total) * 100;
+  } else {
+    pct = (gameState.currentQ / QUESTIONS.length) * 100;
+  }
   $("question-progress-bar").style.width = pct + "%";
 }
 
@@ -329,9 +351,46 @@ document.querySelectorAll(".option-btn").forEach(btn => {
 
 function handleAnswer(selectedIdx) {
   gameState.isAnswered = true;
-  const q = QUESTIONS[gameState.currentQ];
+  const qIdx = getActiveQuestionIndex();
+  const q = QUESTIONS[qIdx];
   const isTimeout = selectedIdx === -1;
   const isCorrect = !isTimeout && selectedIdx === q.answer;
+
+  if (gameState.retryMode) {
+    if (isCorrect) {
+      vibrate([40, 30, 60]);
+      flashScreen("correct");
+    } else {
+      vibrate([200]);
+    }
+
+    updateOptionVisual(selectedIdx, q.answer, isTimeout);
+    showFeedback(
+      isCorrect,
+      isTimeout,
+      0,
+      0,
+      isCorrect ? "補答正確！" : "這題補答失敗，請再重新驗證一次。"
+    );
+
+    setTimeout(() => {
+      if (!isCorrect) {
+        gameState.retryMode = false;
+        gameState.retryQuestionIndexes = [];
+        gameState.retryCursor = 0;
+        endGame();
+        return;
+      }
+      gameState.retryCursor++;
+      if (gameState.retryCursor < gameState.retryQuestionIndexes.length) {
+        showScreen("screen-game");
+        loadQuestion();
+        return;
+      }
+      finishRetryAndUnlockGrand();
+    }, isCorrect ? 1600 : 1800);
+    return;
+  }
 
   let baseScore = 0;
   let bonusScore = 0;
@@ -386,9 +445,17 @@ function updateOptionVisual(selectedIdx, correctIdx, isTimeout) {
   });
 }
 
-function showFeedback(isCorrect, isTimeout, base, bonus) {
+function showFeedback(isCorrect, isTimeout, base, bonus, customText) {
   const fbArea = $("feedback-area");
   fbArea.style.display = "flex";
+
+  if (customText) {
+    $("feedback-icon").textContent = isCorrect ? "✅" : "⚠️";
+    $("feedback-text").textContent = customText;
+    $("feedback-score").textContent = "";
+    $("feedback-streak").textContent = "";
+    return;
+  }
 
   if (isTimeout) {
     $("feedback-icon").textContent = "⌛";
@@ -466,7 +533,12 @@ function updateSidebar() {
   }
   scoreEl.textContent = formatScore(gameState.score);
 
-  $("display-q-num").textContent = gameState.currentQ + 1;
+  if (gameState.retryMode) {
+    const activeIdx = getActiveQuestionIndex();
+    $("display-q-num").textContent = `${activeIdx + 1}*`;
+  } else {
+    $("display-q-num").textContent = gameState.currentQ + 1;
+  }
 
   // 連擊跳動
   const streakEl = $("display-streak");
@@ -551,9 +623,14 @@ function showUnlockScreen(prize) {
 
   const grandStage = getGrandPrize().stage;
   const isMax = gameState.unlockedPrizes.includes(grandStage);
+  const isGrandPrizeCard = prize.stage === grandStage;
   const hasMoreUnlocks = gameState.unlockQueue.length > 0;
   const onLastQuestion = gameState.currentQ >= QUESTIONS.length - 1;
-  if (isMax || (onLastQuestion && !hasMoreUnlocks)) {
+  gameState.pendingGrandAccept = isGrandPrizeCard;
+
+  if (isGrandPrizeCard) {
+    $("btn-continue").textContent = "打開同居邀請函 💌";
+  } else if (isMax || (onLastQuestion && !hasMoreUnlocks)) {
     $("btn-continue").textContent = "前往結算 🎊";
   } else {
     $("btn-continue").textContent = "繼續挑戰 🎮";
@@ -579,7 +656,13 @@ $("gift-flip-wrap").addEventListener("click", function() {
   }, 500);
 });
 
-$("btn-continue").addEventListener("click", showNextUnlock);
+$("btn-continue").addEventListener("click", function() {
+  if (gameState.pendingGrandAccept) {
+    openGrandLetterScreen(true);
+    return;
+  }
+  showNextUnlock();
+});
 
 // ===================================================
 // 進入下一題 / 結束遊戲
@@ -606,6 +689,7 @@ function advanceGame() {
 function endGame() {
   gameState.gameEnded = true;
   clearInterval(gameState.timerInterval);
+  const hasGrand = gameState.unlockedPrizes.includes(getGrandPrize().stage);
 
   $("result-player-name").textContent = `🎂 ${gameState.playerName}，妳最棒了！`;
 
@@ -631,19 +715,17 @@ function endGame() {
     const unlocked = gameState.unlockedPrizes.includes(p.stage);
     const item = document.createElement("div");
     item.className = `unlocked-item ${unlocked ? "" : "locked"}`;
-    item.innerHTML = `<span class="unlocked-item-icon">${unlocked ? p.icon : "🔒"}</span><span>${p.name}</span>`;
+    item.innerHTML = `<span class="unlocked-item-icon">${unlocked ? p.icon : "🔒"}</span><span>${unlocked ? p.name : "未知獎品"}</span>`;
     list.appendChild(item);
   });
 
   $("result-message").innerHTML = buildResultMessage();
 
   const retryPanel = $("result-retry-panel");
-  const retryCb = $("retry-agree-checkbox");
-  const retryBtn = $("btn-retry-quiz");
-  if (retryPanel && retryCb && retryBtn) {
-    const hasGrand = gameState.unlockedPrizes.includes(getGrandPrize().stage);
+  if (retryPanel) {
     if (!hasGrand) {
       retryPanel.style.display = "block";
+      renderRetryGateQuestions();
       const ul = $("result-retry-conditions");
       if (ul && typeof RETRY_CONDITIONS !== "undefined") {
         ul.innerHTML = "";
@@ -653,12 +735,8 @@ function endGame() {
           ul.appendChild(li);
         });
       }
-      retryCb.checked = false;
-      retryBtn.disabled = true;
     } else {
       retryPanel.style.display = "none";
-      retryCb.checked = false;
-      retryBtn.disabled = true;
     }
   }
 
@@ -701,53 +779,110 @@ function buildResultMessage() {
 // 重新挑戰
 // ===================================================
 
-function resetQuizForRetry() {
-  const name = gameState.playerName;
-  gameState = makeInitialState();
-  gameState.playerName = name;
-  gameState.startTime = new Date();
-  const retryCb = $("retry-agree-checkbox");
-  const retryBtn = $("btn-retry-quiz");
+function collectWrongQuestionIndexes() {
+  const wrong = new Set();
+  gameState.answerLog.forEach((entry) => {
+    if (entry.correct) return;
+    const idx = QUESTIONS.findIndex((q) => q.id === entry.qId);
+    if (idx >= 0) wrong.add(idx);
+  });
+  return Array.from(wrong);
+}
+
+function startRetryForWrongQuestions() {
+  const wrongIndexes = collectWrongQuestionIndexes();
+  if (wrongIndexes.length === 0) {
+    finishRetryAndUnlockGrand();
+    return;
+  }
+  gameState.retryMode = true;
+  gameState.retryQuestionIndexes = wrongIndexes;
+  gameState.retryCursor = 0;
+  gameState.isAnswered = false;
   const retryPanel = $("result-retry-panel");
-  if (retryCb) retryCb.checked = false;
-  if (retryBtn) retryBtn.disabled = true;
   if (retryPanel) retryPanel.style.display = "none";
   showScreen("screen-game");
   loadQuestion();
 }
 
-const retryAgreeEl = $("retry-agree-checkbox");
-if (retryAgreeEl) {
-  retryAgreeEl.addEventListener("change", function() {
-    const btn = $("btn-retry-quiz");
-    if (btn) btn.disabled = !this.checked;
+function finishRetryAndUnlockGrand() {
+  const grand = getGrandPrize();
+  gameState.retryMode = false;
+  gameState.retryQuestionIndexes = [];
+  gameState.retryCursor = 0;
+  gameState.score = Math.max(gameState.score, grand.threshold);
+  if (!gameState.unlockedPrizes.includes(grand.stage)) {
+    gameState.unlockedPrizes.push(grand.stage);
+  }
+  gameState.currentPrize = grand;
+  gameState.unlockQueue = [grand];
+  updateSidebar();
+  showNextUnlock();
+}
+
+function renderRetryGateQuestions() {
+  const wrap = $("retry-gate-fields");
+  if (!wrap) return;
+  wrap.innerHTML = "";
+  (RETRY_GATE_QUESTIONS || []).forEach((item, idx) => {
+    const row = document.createElement("div");
+    row.className = "retry-gate-item";
+    row.innerHTML = `
+      <label class="retry-gate-label" for="retry-gate-input-${idx}">${idx + 1}. ${item.question}</label>
+      <input id="retry-gate-input-${idx}" class="retry-gate-input" type="text" autocomplete="off" placeholder="${item.placeholder || ""}">
+      <div id="retry-gate-error-${idx}" class="retry-gate-error"></div>
+    `;
+    wrap.appendChild(row);
   });
 }
 
-const retryQuizBtn = $("btn-retry-quiz");
-if (retryQuizBtn) {
-  retryQuizBtn.addEventListener("click", function() {
-    const cb = $("retry-agree-checkbox");
-    if (!cb || !cb.checked) return;
-    resetQuizForRetry();
+const retryGateForm = $("retry-gate-form");
+if (retryGateForm) {
+  retryGateForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+    const items = RETRY_GATE_QUESTIONS || [];
+    let allCorrect = true;
+    items.forEach((item, idx) => {
+      const input = $(`retry-gate-input-${idx}`);
+      const error = $(`retry-gate-error-${idx}`);
+      if (!input || !error) return;
+      if (normalizeAnswer(input.value) !== normalizeAnswer(item.answer)) {
+        error.textContent = item.errorMsg || "答案錯誤";
+        allCorrect = false;
+      } else {
+        error.textContent = "";
+      }
+    });
+    if (!allCorrect) return;
+    startRetryForWrongQuestions();
   });
 }
 
-$("btn-restart").addEventListener("click", function() {
-  gameState = makeInitialState();
-  // 重置起始頁輸入
-  $("input-q1").value = "";
-  $("input-q2").value = "";
-  $("error-q1").textContent = "";
-  $("error-q2").textContent = "";
-  const retryCb = $("retry-agree-checkbox");
-  const retryBtn = $("btn-retry-quiz");
-  const retryPanel = $("result-retry-panel");
-  if (retryCb) retryCb.checked = false;
-  if (retryBtn) retryBtn.disabled = true;
-  if (retryPanel) retryPanel.style.display = "none";
-  showScreen("screen-start");
-});
+function openGrandLetterScreen(fromUnlock) {
+  const letter = typeof GRAND_PRIZE_LETTER === "object" ? GRAND_PRIZE_LETTER : {};
+  $("letter-title").textContent = letter.title || "";
+  $("letter-subtitle").textContent = letter.subtitle || "";
+  $("letter-body").textContent = letter.content || "";
+  $("letter-sign").textContent = letter.sign ? `— ${letter.sign}` : "";
+  const backBtn = $("btn-letter-back");
+  if (backBtn) {
+    backBtn.textContent = fromUnlock ? "接受邀請並前往結算 💍" : "返回結算頁";
+    backBtn.dataset.fromUnlock = fromUnlock ? "1" : "0";
+  }
+  showScreen("screen-grand-letter");
+}
+
+const letterBackBtn = $("btn-letter-back");
+if (letterBackBtn) {
+  letterBackBtn.addEventListener("click", function() {
+    if (this.dataset.fromUnlock === "1") {
+      gameState.pendingGrandAccept = false;
+      endGame();
+      return;
+    }
+    showScreen("screen-result");
+  });
+}
 
 // ===================================================
 // 彩帶特效

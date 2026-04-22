@@ -79,10 +79,6 @@
           <span class="rule-icon">⭐</span>
           <span>第 20 題為<strong>最終挑戰題</strong></span>
         </div>
-        <div class="rule-item">
-          <span class="rule-icon">⏪</span>
-          <span>若未達滿分與大獎，結算頁可<strong>同意條件後重新回溯作答</strong></span>
-        </div>
       </div>
       <div class="intro-note">
         <p>✨ 妳每答對一題，就離驚喜更近一點</p>
@@ -246,15 +242,28 @@
       </div>
       <div class="result-retry-panel" id="result-retry-panel" style="display:none">
         <div class="result-retry-title">想重新回溯作答嗎？</div>
-        <p class="result-retry-desc">若這一輪未達滿分積分、沒拿到大獎，可以選擇從頭再玩一次。請先閱讀並同意以下條件：</p>
+        <p class="result-retry-desc">若這一輪未達滿分積分、沒拿到大獎，可先完成驗證，再只重答先前做錯的題目。</p>
         <ul class="result-retry-conditions" id="result-retry-conditions"></ul>
-        <label class="result-retry-agree">
-          <input type="checkbox" id="retry-agree-checkbox">
-          <span>我同意以上條件，並從第 1 題重新作答</span>
-        </label>
-        <button type="button" id="btn-retry-quiz" class="btn btn-primary btn-large" disabled>重新回溯作答 ⏪</button>
+        <form id="retry-gate-form" class="retry-gate-form">
+          <div id="retry-gate-fields"></div>
+          <button type="submit" id="btn-retry-quiz" class="btn btn-primary btn-large">通過驗證並補答錯題 ⏪</button>
+        </form>
       </div>
-      <button id="btn-restart" class="btn btn-restart btn-large">再挑戰一次 🔄</button>
+    </div>
+  </div>
+
+  <div id="screen-grand-letter" class="screen">
+    <div class="letter-scene">
+      <div class="letter-envelope" id="letter-envelope">
+        <div class="letter-envelope-front"></div>
+      </div>
+      <div class="letter-paper" id="letter-paper">
+        <div class="letter-title" id="letter-title"></div>
+        <div class="letter-subtitle" id="letter-subtitle"></div>
+        <div class="letter-body" id="letter-body"></div>
+        <div class="letter-sign" id="letter-sign"></div>
+      </div>
+      <button id="btn-letter-back" class="btn btn-restart btn-large">返回結算頁</button>
     </div>
   </div>
 

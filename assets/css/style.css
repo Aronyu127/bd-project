@@ -414,13 +414,16 @@ html, body {
   font-size: 0.75rem;
   font-weight: 700;
   color: var(--gold-dark);
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.prize-bar-current {
+  display: block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 90px;
 }
-
-.prize-bar-current { display: block; }
 
 .prize-bar-mid {
   flex: 1;
@@ -442,9 +445,9 @@ html, body {
 }
 
 .prize-bar-right {
+  flex: 0 0 auto;
   text-align: right;
-  max-width: 90px;
-  overflow: hidden;
+  min-width: 74px;
 }
 
 .prize-bar-next {
@@ -992,29 +995,152 @@ html, body {
 
 .result-retry-conditions li { margin-bottom: 6px; }
 
-.result-retry-agree {
+.retry-gate-form {
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
   gap: 10px;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--text);
-  cursor: pointer;
-  margin-bottom: 14px;
-  line-height: 1.45;
 }
 
-.result-retry-agree input {
-  margin-top: 3px;
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-  accent-color: var(--pink-dark);
+.retry-gate-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.retry-gate-label {
+  font-size: 0.85rem;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.retry-gate-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 2px solid #d8caef;
+  background: #fff;
+  font-size: 0.92rem;
+}
+
+.retry-gate-input:focus {
+  outline: none;
+  border-color: var(--pink);
+}
+
+.retry-gate-error {
+  min-height: 1.1em;
+  font-size: 0.78rem;
+  color: var(--wrong);
+  font-weight: 600;
 }
 
 #btn-retry-quiz {
   width: 100%;
   margin-top: 0;
+}
+
+#screen-grand-letter {
+  position: relative;
+  overflow: hidden;
+}
+
+.letter-scene {
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+}
+
+.letter-envelope {
+  width: 320px;
+  height: 210px;
+  margin: 0 auto;
+  position: relative;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ffe0f3, #f7c6e9);
+  box-shadow: 0 10px 35px rgba(224, 93, 189, 0.25);
+}
+
+.letter-envelope::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1px;
+  margin: auto;
+  width: 0;
+  height: 0;
+  border-left: 160px solid transparent;
+  border-right: 160px solid transparent;
+  border-top: 110px solid #ffd4ee;
+  transform-origin: top center;
+  animation: envelopeFlap 0.55s ease forwards 0.1s;
+  z-index: 4;
+}
+
+.letter-envelope-front {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 62%;
+  background: linear-gradient(180deg, #ffd3ee, #ffc2e6);
+  border-radius: 0 0 12px 12px;
+  z-index: 3;
+}
+
+.letter-paper {
+  width: 300px;
+  margin: -120px auto 0;
+  background: #fffdf8;
+  border: 1px solid #f2e6d7;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  padding: 22px 20px;
+  text-align: left;
+  position: relative;
+  z-index: 2;
+  animation: letterPopOut 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.letter-title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--pink-dark);
+  margin-bottom: 4px;
+}
+
+.letter-subtitle {
+  font-size: 0.82rem;
+  color: var(--text-light);
+  margin-bottom: 14px;
+}
+
+.letter-body {
+  white-space: pre-line;
+  line-height: 1.8;
+  font-size: 0.94rem;
+  color: #6f4b6f;
+}
+
+.letter-sign {
+  margin-top: 16px;
+  text-align: right;
+  font-weight: 700;
+  color: var(--pink-dark);
+}
+
+#btn-letter-back {
+  margin-top: 16px;
+}
+
+@keyframes envelopeFlap {
+  from { transform: rotateX(0deg); }
+  to { transform: rotateX(175deg); }
+}
+
+@keyframes letterPopOut {
+  from { opacity: 0; transform: translateY(90px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 /* ===================================================
@@ -1152,8 +1278,8 @@ html, body {
 
 .gift-flip-wrap {
   perspective: 800px;
-  width: 160px;
-  height: 160px;
+  width: min(300px, 88%);
+  height: 300px;
   margin: 0 auto 20px;
   cursor: pointer;
 }
@@ -1210,8 +1336,34 @@ html, body {
   background: linear-gradient(135deg, #fffbe8 0%, #fff5d6 100%);
   border: 2px solid var(--gold);
   transform: rotateY(180deg);
-  padding: 12px;
+  padding: 16px 14px;
   text-align: center;
+  justify-content: flex-start;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.gift-back .unlock-prize-img {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 4px;
+  flex-shrink: 0;
+}
+
+.gift-back .unlock-prize-icon {
+  font-size: 2.4rem;
+  margin-bottom: 0;
+  line-height: 1;
+}
+
+.gift-back .unlock-prize-name {
+  width: 100%;
+  font-size: 0.95rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  max-height: calc(1.35em * 3);
+  overflow: hidden;
 }
 
 /* 解鎖內容淡入 */
