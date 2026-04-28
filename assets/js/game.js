@@ -3,6 +3,12 @@
 // ===================================================
 
 const TIMER_TOTAL = 15;
+const AUDIO_SOURCES = {
+  bgm: "assets/audio/bgm.mp3",
+  correct: "assets/audio/sfx-correct.mp3",
+  wrong: "assets/audio/sfx-wrong.mp3",
+  unlock: "assets/audio/sfx-unlock.mp3",
+};
 
 const CHARACTER_STATES = {
   calm:         { emoji: "🐱",  text: "加油！" },
@@ -43,6 +49,7 @@ function makeInitialState() {
 }
 
 let gameState = makeInitialState();
+const audioSystem = createAudioSystem();
 
 // ===================================================
 // 工具函式
@@ -61,6 +68,85 @@ function normalizeAnswer(input) {
   return (input || "").trim().toLowerCase();
 }
 
+function createAudioSystem() {
+  const bgm = new Audio(AUDIO_SOURCES.bgm);
+  bgm.loop = true;
+  bgm.volume = 0.24;
+  bgm.preload = "auto";
+
+  const effects = {
+    correct: new Audio(AUDIO_SOURCES.correct),
+    wrong: new Audio(AUDIO_SOURCES.wrong),
+    unlock: new Audio(AUDIO_SOURCES.unlock),
+  };
+  Object.values(effects).forEach((a) => {
+    a.preload = "auto";
+    a.volume = 0.5;
+  });
+
+  let enabled = true;
+  let unlocked = false;
+  let started = false;
+  const toggleBtn = $("btn-audio-toggle");
+
+  function renderToggle() {
+    if (!toggleBtn) return;
+    toggleBtn.textContent = enabled ? "🔊 音樂開啟" : "🔇 音樂關閉";
+    toggleBtn.setAttribute("aria-pressed", enabled ? "true" : "false");
+  }
+
+  async function tryStartBgm() {
+    if (!enabled || started || !unlocked) return;
+    try {
+      await bgm.play();
+      started = true;
+    } catch (_) {
+      started = false;
+    }
+  }
+
+  async function unlockAndMaybeStart() {
+    unlocked = true;
+    await tryStartBgm();
+  }
+
+  function playEffect(name) {
+    if (!enabled) return;
+    const src = effects[name];
+    if (!src) return;
+    try {
+      const snd = src.cloneNode();
+      snd.volume = src.volume;
+      snd.play().catch(() => {});
+    } catch (_) {}
+  }
+
+  async function setEnabled(next) {
+    enabled = !!next;
+    renderToggle();
+    if (!enabled) {
+      bgm.pause();
+      started = false;
+      return;
+    }
+    await unlockAndMaybeStart();
+  }
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener("click", () => {
+      setEnabled(!enabled);
+    });
+  }
+
+  renderToggle();
+  return {
+    unlockAndMaybeStart,
+    playCorrect: () => playEffect("correct"),
+    playWrong: () => playEffect("wrong"),
+    playUnlock: () => playEffect("unlock"),
+  };
+}
+
 function getGrandPrize() {
   return PRIZES[PRIZES.length - 1];
 }
@@ -71,22 +157,6 @@ function getActiveQuestionIndex() {
   }
   return gameState.currentQ;
 }
-
-function computePerfectRunMaxScore(questionCount) {
-  let total = 0;
-  let streak = 0;
-  for (let i = 0; i < questionCount; i++) {
-    const bonus = streak >= 1 ? getStreakBonus(streak + 1) : 0;
-    total += 100 + bonus;
-    streak++;
-  }
-  return total;
-}
-
-(function syncGrandPrizeThresholdToPerfectScore() {
-  const grand = PRIZES[PRIZES.length - 1];
-  grand.threshold = computePerfectRunMaxScore(QUESTIONS.length);
-})();
 
 // 震動（手機觸覺回饋）
 function vibrate(pattern) {
@@ -191,6 +261,7 @@ $("input-q2").placeholder = START_QUESTIONS[1].placeholder;
 
 $("form-start").addEventListener("submit", function(e) {
   e.preventDefault();
+  audioSystem.unlockAndMaybeStart();
   const ans1 = $("input-q1").value.trim();
   const ans2 = $("input-q2").value.trim();
   let valid = true;
@@ -212,7 +283,7 @@ $("form-start").addEventListener("submit", function(e) {
   }
 
   if (valid) {
-    gameState.playerName = ans1;
+    gameState.playerName = "Karen";
     showScreen("screen-intro");
   }
 });
@@ -222,6 +293,7 @@ $("form-start").addEventListener("submit", function(e) {
 // ===================================================
 
 $("btn-agree").addEventListener("click", function() {
+  audioSystem.unlockAndMaybeStart();
   gameState.startTime = new Date();
   showScreen("screen-game");
   loadQuestion();
@@ -375,6 +447,7 @@ function updateTimerDisplay(val, isFinal) {
 
 document.querySelectorAll(".option-btn").forEach(btn => {
   btn.addEventListener("click", function() {
+    audioSystem.unlockAndMaybeStart();
     if (gameState.isAnswered) return;
     clearInterval(gameState.timerInterval);
     handleAnswer(parseInt(this.dataset.index));
@@ -394,9 +467,11 @@ function handleAnswer(selectedIdx) {
 
   if (gameState.retryMode) {
     if (isCorrect) {
+      audioSystem.playCorrect();
       vibrate([40, 30, 60]);
       flashScreen("correct");
     } else {
+      audioSystem.playWrong();
       vibrate([200]);
     }
 
@@ -432,12 +507,14 @@ function handleAnswer(selectedIdx) {
   let bonusScore = 0;
 
   if (isCorrect) {
+    audioSystem.playCorrect();
     baseScore = 100;
     if (gameState.streak >= 1) bonusScore = getStreakBonus(gameState.streak + 1);
     gameState.streak++;
     gameState.consecutiveFail = 0;
     vibrate([40, 30, 60]); // 答對震動
   } else {
+    audioSystem.playWrong();
     gameState.streak = 0;
     gameState.consecutiveFail++;
     vibrate([200]); // 答錯震動
@@ -638,6 +715,7 @@ function showNextUnlock() {
 }
 
 function showUnlockScreen(prize) {
+  audioSystem.playUnlock();
   // 重置翻轉狀態
   const flipInner = $("gift-flip-inner");
   const revealContent = $("unlock-reveal-content");

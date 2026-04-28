@@ -42,6 +42,26 @@ html, body {
 }
 .screen.active { display: flex; align-items: center; justify-content: center; padding: 20px; }
 
+.audio-toggle-btn {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 9999;
+  border: none;
+  border-radius: 999px;
+  padding: 9px 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #9d88ee 0%, #d664c2 100%);
+  box-shadow: 0 4px 14px rgba(130, 88, 180, 0.35);
+  cursor: pointer;
+}
+
+.audio-toggle-btn:hover {
+  transform: translateY(-1px);
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -105,6 +125,16 @@ html, body {
   position: relative;
 }
 
+.birthday-cake-emoji {
+  position: absolute;
+  left: 50%;
+  top: -28px;
+  transform: translateX(-50%);
+  font-size: 1.8rem;
+  z-index: 2;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.18));
+}
+
 .start-photo {
   width: 130px;
   height: 130px;
@@ -164,6 +194,26 @@ html, body {
   font-size: 0.95rem;
   line-height: 1.7;
   margin-bottom: 24px;
+}
+
+.secret-line {
+  display: inline-block;
+  padding: 4px 14px;
+  margin-bottom: 8px;
+  border-radius: 999px;
+  font-size: 1.02rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #b5368f;
+  background: linear-gradient(135deg, #fff3a9 0%, #ffd9f4 100%);
+  border: 2px solid rgba(181, 54, 143, 0.28);
+  box-shadow: 0 4px 14px rgba(181, 54, 143, 0.22);
+  animation: secretPop 1.8s ease-in-out infinite;
+}
+
+@keyframes secretPop {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-1px) scale(1.03); }
 }
 
 .start-form { text-align: left; }
@@ -764,7 +814,19 @@ html, body {
   font-size: 1.8rem;
   font-weight: 800;
   color: var(--pink-dark);
-  margin-bottom: 20px;
+  margin-bottom: 8px;
+}
+
+.unlock-future-note {
+  display: inline-block;
+  margin-bottom: 14px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #9a5f00;
+  background: linear-gradient(135deg, #fff6bf 0%, #ffe8f9 100%);
+  border: 1px solid rgba(255, 185, 80, 0.45);
 }
 
 .unlock-prize-card {
@@ -1480,12 +1542,65 @@ html, body {
   .game-topbar { border-radius: 0; }
 }
 
-/* 小手機：選項全部單欄 */
+/* 小手機：維持兩欄並縮小頂欄字級 */
 @media (max-width: 400px) {
-  .options-grid { grid-template-columns: 1fr; }
   .topbar-score-value,
   .topbar-streak-value { font-size: 1.3rem; }
   .topbar-character { font-size: 1.6rem; }
+}
+
+/* 手機：確保一屏可看完題目與 4 個選項 */
+@media (max-width: 430px) {
+  .game-main {
+    padding: 8px 10px 12px;
+  }
+
+  .question-card {
+    padding: 10px 10px 12px;
+  }
+
+  .timer-wrap {
+    width: 46px;
+    height: 46px;
+    margin: 0 auto 8px;
+  }
+
+  .timer-svg {
+    width: 46px;
+    height: 46px;
+  }
+
+  .timer-text {
+    font-size: 0.95rem;
+  }
+
+  .question-image-wrap {
+    margin-bottom: 8px;
+    min-height: 88px;
+  }
+
+  .question-image-wrap img {
+    max-height: 30vh;
+  }
+
+  .question-text {
+    font-size: 0.95rem;
+    line-height: 1.35;
+    margin-bottom: 10px;
+  }
+
+  .options-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+    margin-bottom: 6px;
+  }
+
+  .option-btn {
+    padding: 8px 8px;
+    font-size: 0.9rem;
+    line-height: 1.2;
+    min-height: 42px;
+  }
 }
 
 /* 確保起始/說明/結算頁在大螢幕置中 */

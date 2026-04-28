@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+  <button id="btn-audio-toggle" class="audio-toggle-btn" type="button" aria-label="切換音樂">🔇 音樂關閉</button>
 
   <!-- ===== 起始頁 ===== -->
   <div id="screen-start" class="screen active">
@@ -20,6 +21,7 @@
     <div class="start-card card">
       <!-- 壽星照片區 -->
       <div class="start-photo-wrap">
+        <span class="birthday-cake-emoji" aria-hidden="true">🎂</span>
         <img class="start-photo" src="assets/images/birthday-star.jpg" alt="壽星照片"
           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <div class="start-photo-placeholder">
@@ -28,8 +30,12 @@
           <span class="photo-hint">assets/images/birthday-star.jpg</span>
         </div>
       </div>
-      <h1 class="start-title">高靖婷生日大挑戰</h1>
-      <p class="start-subtitle">在一起一年多好多地方都有我們的回憶 <br>今年生日能夠拿到什麼生日禮物就看你記得多少我們的回憶囉</p>
+      <h1 class="start-title">珠寶生日大挑戰</h1>
+      <p class="start-subtitle">
+        <span class="secret-line">✨哇 恭喜你發現了生日挑戰關卡✨</span><br>
+        能帶走什麼生日禮物<br>
+        就看妳記得多少我們的回憶囉<br>😉
+      </p>
       <form id="form-start" class="start-form">
         <div class="form-group">
           <label id="label-q1"></label>
@@ -42,7 +48,7 @@
           <span class="form-error" id="error-q2"></span>
         </div>
         <button type="submit" class="btn btn-primary btn-large">
-          <span>準備好了！</span>
+          <span>開始挑戰！</span>
           <span class="btn-sparkle">✨</span>
         </button>
       </form>
@@ -178,6 +184,7 @@
     <div class="unlock-card card">
       <div class="unlock-trophy">🏆</div>
       <h2 class="unlock-title">🎉 新獎品解鎖！</h2>
+      <p class="unlock-future-note">🚀 未來｜你已經走過過去與現在</p>
 
       <!-- 拆禮物區：先顯示禮物盒，點擊後翻轉揭曉 -->
       <div class="gift-flip-wrap" id="gift-flip-wrap">

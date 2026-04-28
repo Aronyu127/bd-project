@@ -4,18 +4,16 @@
 
 const START_QUESTIONS = [
   {
-    question: "我們第一次一起看煙火的地方是在哪？",
-    answer: "1",
-    // answer: "秀朗追風河濱公園",          // 不分大小寫、允許前後空白
+    question: "🕰️ 過去｜我們第一次一起看煙火的地方？",
+    answer: "秀朗追風河濱公園",          // 不分大小寫、允許前後空白
     placeholder: "????????",
     errorMsg: "答錯囉，再想想 可以參考google map 的名稱",
   },
   {
-    question: "我們今天的目的地是哪裡?",
-    answer: "1",
-    // answer: "凱撒趣淘漫旅-台南",           // 答案格式需與 placeholder 一致
+    question: "📍 現在｜4/30當天的住宿地點是?",
+    answer: "凱撒趣淘漫旅-台南",           // 答案格式需與 placeholder 一致
     placeholder: "??????-??",
-    errorMsg: "答錯囉，再想想 ",
+    errorMsg: "答錯囉，再想想 附近有個水庫喔",
   },
 ];
 
@@ -182,11 +180,11 @@ const PRIZE_IMAGE_4 = "assets/images/gift/gift-4-q40.jpg";
 const PRIZE_IMAGE_5 = "assets/images/gift/gift-5-q40.jpg";
 
 const PRIZES = [
-  { stage: 1, threshold: 500, name: "參加獎：滑雪版套乙組", icon: "🎿", image: PRIZE_IMAGE_1, message: "恭喜你獲得 “有參加就能獲得的參加獎”，理所當然的程度最適合理所當然的獎品" },
-  { stage: 2, threshold: 1200, name: "銅賞：慢跑鞋乙雙", icon: "👟", image: PRIZE_IMAGE_2, message: "唉呦 還可以嘛，這個適合運動甜心的獎品就送給你吧" },
+  { stage: 1, threshold: 400, name: "參加獎：滑雪版套乙組", icon: "🎿", image: PRIZE_IMAGE_1, message: "恭喜你獲得 “有參加就能獲得的參加獎”，理所當然的程度最適合理所當然的獎品" },
+  { stage: 2, threshold: 1000, name: "銅賞：慢跑鞋乙雙", icon: "👟", image: PRIZE_IMAGE_2, message: "唉呦 還可以嘛，這個適合運動甜心的獎品就送給你吧" },
   { stage: 3, threshold: 1800, name: "銀賞：台南之旅加碼ㄧ泊二食", icon: "🧳", image: PRIZE_IMAGE_3, message: "什麼？ 出乎意料 你竟然能夠走到這，老闆加碼ㄧ泊二食" },
-  { stage: 4, threshold: 2500, name: "金賞：台東九天八夜之旅機加酒", icon: "✈️", image: PRIZE_IMAGE_4, message: "哇 太猛了吧！！ 給珍視回憶的珠寶的獎品 -> 我們再一起創造更多回憶吧" },
-  { stage: 5, threshold: 3400, name: "大獎：同居邀請函", icon: "💌", image: "", message: "恭喜你獲得最終大獎，你已經證明就算過程有失敗，你也不會放棄，記住你填的問題的答案，我們一起共創未來的每一天吧" },
+  { stage: 4, threshold: 2800, name: "金賞：台東九天八夜之旅機加酒", icon: "✈️", image: PRIZE_IMAGE_4, message: "哇 太猛了吧！！ 給珍視回憶的珠寶的獎品 -> 我們再一起創造更多回憶吧" },
+  { stage: 5, threshold: 4000, name: "大獎：同居邀請函", icon: "💌", image: "", message: "恭喜你獲得最終大獎，你已經證明就算過程有失敗，你也不會放棄，記住你填的問題的答案，我們一起共創未來的每一天吧" },
 ];
 
 const RETRY_CONDITIONS = [
@@ -219,6 +217,6 @@ const GRAND_PRIZE_LETTER = {
 謝謝妳陪我走過每一段日常、每一次旅行，也謝謝妳一直都在。
 如果妳願意，我想邀請妳和我一起，把未來的平凡日子變成我們的小冒險。
 
-妳願意收下這份同居邀請，跟我一起開始下一章嗎？`,
+妳願意收下這份邀請，跟我一起開始同居嗎？`,
   sign: "Aron",
 };
