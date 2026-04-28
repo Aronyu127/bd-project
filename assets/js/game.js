@@ -116,10 +116,16 @@ function setQuestionImageLoading(isLoading) {
   else wrap.classList.remove("is-loading");
 }
 
+const imagePreloadCache = new Map();
+
 function preloadImage(src, timeoutMs) {
-  return new Promise((resolve) => {
+  if (!src) return Promise.resolve(false);
+  if (imagePreloadCache.has(src)) return imagePreloadCache.get(src);
+
+  const task = new Promise((resolve) => {
     let settled = false;
     const preloader = new Image();
+    preloader.decoding = "async";
     const cleanup = () => {
       preloader.removeEventListener("load", onLoad);
       preloader.removeEventListener("error", onError);
@@ -145,6 +151,33 @@ function preloadImage(src, timeoutMs) {
 
     setTimeout(() => finalize(false), timeoutMs);
   });
+
+  imagePreloadCache.set(src, task);
+  return task;
+}
+
+function prefetchUpcomingQuestionImages(startIndex, count) {
+  const begin = Math.max(0, startIndex);
+  const end = Math.min(QUESTIONS.length, begin + count);
+  for (let i = begin; i < end; i++) {
+    const src = QUESTIONS[i] && QUESTIONS[i].image;
+    if (!src) continue;
+    preloadImage(src, 12000);
+  }
+}
+
+function setQuestionImageAttributes(img) {
+  if (!img) return;
+  img.loading = "eager";
+  img.decoding = "async";
+  img.fetchPriority = "high";
+}
+
+function setResultImageAttributes(img) {
+  if (!img) return;
+  img.loading = "lazy";
+  img.decoding = "async";
+  img.fetchPriority = "low";
 }
 
 // ===================================================
@@ -226,6 +259,7 @@ function loadQuestion() {
   // 題目圖片
   const imgWrap = $("question-image-wrap");
   const img = $("question-image");
+  setQuestionImageAttributes(img);
   gameState.questionRenderToken = (gameState.questionRenderToken || 0) + 1;
   const renderToken = gameState.questionRenderToken;
   img.style.visibility = "hidden";
@@ -245,12 +279,14 @@ function loadQuestion() {
       }
       setOptionsDisabled(false);
       startTimer(q.isFinal);
+      prefetchUpcomingQuestionImages(qIdx + 1, 3);
     });
   } else {
     imgWrap.style.display = "none";
     setQuestionImageLoading(false);
     setOptionsDisabled(false);
     startTimer(q.isFinal);
+    prefetchUpcomingQuestionImages(qIdx + 1, 3);
   }
 
   $("question-text").textContent = q.text;
@@ -610,11 +646,20 @@ function showUnlockScreen(prize) {
 
   // 準備背面內容（先填入，翻轉後才顯示）
   const unlockImg = $("unlock-prize-img");
+  const closedEnvelope = $("unlock-envelope-closed");
+  const giftBack = document.querySelector(".gift-back");
+  const isGrandPrizeCard = prize.stage === 5;
+  if (giftBack) {
+    giftBack.classList.toggle("grand-envelope-mode", isGrandPrizeCard);
+  }
   if (prize.image) {
     unlockImg.src = prize.image;
-    unlockImg.style.display = "block";
+    unlockImg.style.display = isGrandPrizeCard ? "none" : "block";
   } else {
     unlockImg.style.display = "none";
+  }
+  if (closedEnvelope) {
+    closedEnvelope.style.display = isGrandPrizeCard ? "block" : "none";
   }
   $("unlock-prize-icon").textContent = prize.icon;
   $("unlock-prize-name").textContent = prize.name;
@@ -623,7 +668,6 @@ function showUnlockScreen(prize) {
 
   const grandStage = getGrandPrize().stage;
   const isMax = gameState.unlockedPrizes.includes(grandStage);
-  const isGrandPrizeCard = prize.stage === grandStage;
   const hasMoreUnlocks = gameState.unlockQueue.length > 0;
   const onLastQuestion = gameState.currentQ >= QUESTIONS.length - 1;
   gameState.pendingGrandAccept = isGrandPrizeCard;
@@ -694,6 +738,7 @@ function endGame() {
   $("result-player-name").textContent = `🎂 ${gameState.playerName}，妳最棒了！`;
 
   const resultImg = $("result-final-prize-img");
+  setResultImageAttributes(resultImg);
   if (gameState.currentPrize) {
     if (gameState.currentPrize.image) {
       resultImg.src = gameState.currentPrize.image;
@@ -860,6 +905,21 @@ if (retryGateForm) {
 
 function openGrandLetterScreen(fromUnlock) {
   const letter = typeof GRAND_PRIZE_LETTER === "object" ? GRAND_PRIZE_LETTER : {};
+  const grandPrize = getGrandPrize();
+  const letterPrizeImage = $("letter-prize-image");
+  const letterPaperPrizeImage = $("letter-paper-prize-image");
+  const imageSrc = (letter && letter.image) || (grandPrize && grandPrize.image) || "";
+  if (letterPrizeImage) {
+    if (imageSrc) {
+      letterPrizeImage.src = imageSrc;
+      letterPrizeImage.style.display = "block";
+    } else {
+      letterPrizeImage.style.display = "none";
+    }
+  }
+  if (letterPaperPrizeImage) {
+    letterPaperPrizeImage.style.display = "none";
+  }
   $("letter-title").textContent = letter.title || "";
   $("letter-subtitle").textContent = letter.subtitle || "";
   $("letter-body").textContent = letter.content || "";
