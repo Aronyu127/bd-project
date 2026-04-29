@@ -32,7 +32,7 @@
       </div>
       <h1 class="start-title">珠寶生日大挑戰</h1>
       <p class="start-subtitle">
-        <span class="secret-line">✨哇 恭喜你發現了生日挑戰關卡✨</span><br>
+        <span class="secret-line">✨哇 你發現了生日挑戰關卡✨</span><br>
         能帶走什麼生日禮物<br>
         就看妳記得多少我們的回憶囉<br>😉
       </p>
@@ -83,7 +83,7 @@
         </div>
       </div>
       <div class="intro-note">
-        <p>✨ 妳每答對一題，就離驚喜更近一點</p>
+        <p>✨ 祝你生日快樂 挑戰順利 🎉</p>
         <p class="intro-disclaimer">本活動內容保有最終解釋權，所有獎品需配合主辦人兌換</p>
       </div>
       <button id="btn-agree" class="btn btn-primary btn-large">
@@ -184,7 +184,7 @@
     <div class="unlock-card card">
       <div class="unlock-trophy">🏆</div>
       <h2 class="unlock-title">🎉 新獎品解鎖！</h2>
-      <p class="unlock-future-note">🚀 未來｜你已經走過過去與現在</p>
+      <p class="unlock-future-note" id="unlock-future-note">🚀 未來｜你已經走過過去與現在</p>
 
       <!-- 拆禮物區：先顯示禮物盒，點擊後翻轉揭曉 -->
       <div class="gift-flip-wrap" id="gift-flip-wrap">
@@ -249,12 +249,15 @@
         <p class="result-message" id="result-message"></p>
       </div>
       <div class="result-retry-panel" id="result-retry-panel" style="display:none">
-        <div class="result-retry-title">想重新回溯作答嗎？</div>
-        <ul class="result-retry-conditions" id="result-retry-conditions"></ul>
-        <form id="retry-gate-form" class="retry-gate-form">
-          <div id="retry-gate-fields"></div>
-          <button type="submit" id="btn-retry-quiz" class="btn btn-primary btn-large">通過驗證並補答錯題 ⏪</button>
-        </form>
+        <button type="button" id="btn-retry-toggle" class="btn btn-primary btn-large">哭了 我好想要剩下的獎品</button>
+        <div class="result-retry-content" id="result-retry-content">
+          <div class="result-retry-title">重新挑戰機會</div>
+          <ul class="result-retry-conditions" id="result-retry-conditions"></ul>
+          <form id="retry-gate-form" class="retry-gate-form">
+            <div id="retry-gate-fields"></div>
+            <button type="submit" id="btn-retry-quiz" class="btn btn-primary btn-large">通過驗證並補答錯題 ⏪</button>
+          </form>
+        </div>
       </div>
     </div>
   </div>

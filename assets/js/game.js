@@ -725,8 +725,12 @@ function showUnlockScreen(prize) {
   // 準備背面內容（先填入，翻轉後才顯示）
   const unlockImg = $("unlock-prize-img");
   const closedEnvelope = $("unlock-envelope-closed");
+  const futureNote = $("unlock-future-note");
   const giftBack = document.querySelector(".gift-back");
   const isGrandPrizeCard = prize.stage === 5;
+  if (futureNote) {
+    futureNote.style.display = isGrandPrizeCard ? "inline-block" : "none";
+  }
   if (giftBack) {
     giftBack.classList.toggle("grand-envelope-mode", isGrandPrizeCard);
   }
@@ -845,9 +849,12 @@ function endGame() {
   $("result-message").innerHTML = buildResultMessage();
 
   const retryPanel = $("result-retry-panel");
+  const retryContent = $("result-retry-content");
+  const retryToggleBtn = $("btn-retry-toggle");
   if (retryPanel) {
     if (!hasGrand) {
       retryPanel.style.display = "block";
+      retryPanel.classList.remove("expanded");
       renderRetryGateQuestions();
       const ul = $("result-retry-conditions");
       if (ul && typeof RETRY_CONDITIONS !== "undefined") {
@@ -857,6 +864,9 @@ function endGame() {
           li.textContent = text;
           ul.appendChild(li);
         });
+      }
+      if (retryToggleBtn) {
+        retryToggleBtn.textContent = "哭了 我好想要剩下的獎品";
       }
     } else {
       retryPanel.style.display = "none";
@@ -933,14 +943,34 @@ function finishRetryAndUnlockGrand() {
   gameState.retryMode = false;
   gameState.retryQuestionIndexes = [];
   gameState.retryCursor = 0;
+
+  // 補答全對後，保證可達成最終門檻並補齊所有達標獎項
   gameState.score = Math.max(gameState.score, grand.threshold);
-  if (!gameState.unlockedPrizes.includes(grand.stage)) {
-    gameState.unlockedPrizes.push(grand.stage);
+  const unlockedBefore = new Set(gameState.unlockedPrizes);
+  const newlyUnlocked = [];
+
+  for (const prize of PRIZES) {
+    if (gameState.score < prize.threshold) continue;
+    if (!gameState.unlockedPrizes.includes(prize.stage)) {
+      gameState.unlockedPrizes.push(prize.stage);
+    }
+    if (!unlockedBefore.has(prize.stage)) {
+      newlyUnlocked.push(prize);
+    }
   }
-  gameState.currentPrize = grand;
-  gameState.unlockQueue = [grand];
+
+  gameState.unlockedPrizes = Array.from(new Set(gameState.unlockedPrizes)).sort((a, b) => a - b);
+  gameState.currentPrize = PRIZES
+    .filter((p) => gameState.unlockedPrizes.includes(p.stage))
+    .sort((a, b) => b.threshold - a.threshold)[0] || null;
+  gameState.unlockQueue = newlyUnlocked.sort((a, b) => a.stage - b.stage);
+
   updateSidebar();
-  showNextUnlock();
+  if (gameState.unlockQueue.length > 0) {
+    showNextUnlock();
+    return;
+  }
+  endGame();
 }
 
 function renderRetryGateQuestions() {
@@ -978,6 +1008,22 @@ if (retryGateForm) {
     });
     if (!allCorrect) return;
     startRetryForWrongQuestions();
+  });
+}
+
+const retryToggleBtn = $("btn-retry-toggle");
+if (retryToggleBtn) {
+  retryToggleBtn.addEventListener("click", function() {
+    const panel = $("result-retry-panel");
+    const content = $("result-retry-content");
+    if (!panel) return;
+    const expanded = panel.classList.toggle("expanded");
+    this.textContent = expanded ? "好像也沒那麼想要了" : "哭了 我好想要剩下的獎品";
+    if (expanded && content) {
+      setTimeout(() => {
+        content.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 220);
+    }
   });
 }
 
