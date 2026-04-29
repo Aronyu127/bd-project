@@ -84,7 +84,7 @@
       </div>
       <div class="intro-note">
         <p>✨ 祝你生日快樂 挑戰順利 🎉</p>
-        <p class="intro-disclaimer">本活動內容保有最終解釋權，所有獎品需配合主辦人兌換</p>
+        <p class="intro-disclaimer">本活動內容保有最終解釋權<br>所有獎品需配合主辦人兌換</p>
       </div>
       <button id="btn-agree" class="btn btn-primary btn-large">
         <span>我同意，開始挑戰！</span>
@@ -136,6 +136,13 @@
         </div>
       </div>
 
+      <div class="feedback-area feedback-area-top" id="feedback-area" style="display:none">
+        <div class="feedback-icon" id="feedback-icon"></div>
+        <div class="feedback-text" id="feedback-text"></div>
+        <div class="feedback-score" id="feedback-score"></div>
+        <div class="feedback-streak" id="feedback-streak"></div>
+      </div>
+
       <!-- 主答題區 -->
       <main class="game-main">
         <div class="question-card card" id="question-card">
@@ -163,14 +170,6 @@
             <button class="option-btn" data-index="1"></button>
             <button class="option-btn" data-index="2"></button>
             <button class="option-btn" data-index="3"></button>
-          </div>
-
-          <!-- 即時回饋 -->
-          <div class="feedback-area" id="feedback-area" style="display:none">
-            <div class="feedback-icon" id="feedback-icon"></div>
-            <div class="feedback-text" id="feedback-text"></div>
-            <div class="feedback-score" id="feedback-score"></div>
-            <div class="feedback-streak" id="feedback-streak"></div>
           </div>
         </div>
       </main>
@@ -249,7 +248,7 @@
         <p class="result-message" id="result-message"></p>
       </div>
       <div class="result-retry-panel" id="result-retry-panel" style="display:none">
-        <button type="button" id="btn-retry-toggle" class="btn btn-primary btn-large">哭了 我好想要剩下的獎品</button>
+        <button type="button" id="btn-retry-toggle" class="btn btn-primary btn-large">哭了  有些題目沒答對 但其他獎品也好想要</button>
         <div class="result-retry-content" id="result-retry-content">
           <div class="result-retry-title">重新挑戰機會</div>
           <ul class="result-retry-conditions" id="result-retry-conditions"></ul>

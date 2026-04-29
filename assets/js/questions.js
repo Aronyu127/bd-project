@@ -5,13 +5,15 @@
 const START_QUESTIONS = [
   {
     question: "🕰️ 過去｜我們第一次一起看煙火的地方？",
-    answer: "秀朗追風河濱公園",          // 不分大小寫、允許前後空白
+    answer: "",
+    // answer: "秀朗追風河濱公園",          // 不分大小寫、允許前後空白
     placeholder: "????????",
     errorMsg: "答錯囉，再想想 可以參考google map 的名稱",
   },
   {
     question: "📍 現在｜4/30當天的住宿地點是?",
-    answer: "凱撒趣淘漫旅-台南",           // 答案格式需與 placeholder 一致
+    answer: "",
+    // answer: "凱撒趣淘漫旅-台南",           // 答案格式需與 placeholder 一致
     placeholder: "??????-??",
     errorMsg: "答錯囉，再想想 附近有個水庫喔",
   },
@@ -180,15 +182,15 @@ const PRIZE_IMAGE_4 = "assets/images/gift/gift-4-q40.jpg";
 const PRIZE_IMAGE_5 = "assets/images/gift/gift-5-q40.jpg";
 
 const PRIZES = [
-  { stage: 1, threshold: 400, name: "參加獎：滑雪版套乙組", icon: "🎿", image: PRIZE_IMAGE_1, message: "恭喜你獲得 “預料之中的參加獎”，獎品好像似曾相似，畢竟是預料中的嘛😉" },
-  { stage: 2, threshold: 1000, name: "銅賞：台南之旅延長一天", icon: "🧳", image: PRIZE_IMAGE_3, message: "唉呦 還可以嘛，幫你加碼台南之旅升級多一天" },
-  { stage: 3, threshold: 1800, name: "銀賞：情侶慢跑鞋乙雙", icon: "👟", image: PRIZE_IMAGE_2, message: "什麼？ 我承認你有點超出預料，運動甜心之後穿上這雙鞋一起去跑步吧" },
+  { stage: 1, threshold: 350, name: "參加獎：滑雪版套乙組", icon: "🎿", image: PRIZE_IMAGE_1, message: "恭喜你獲得 “預料之中的參加獎”，獎品好像似曾相似，畢竟是預料中的嘛😉" },
+  { stage: 2, threshold: 900, name: "銅賞：台南之旅延長一天", icon: "🧳", image: PRIZE_IMAGE_2, message: "唉呦 還可以嘛，幫你加碼台南之旅升級多一天" },
+  { stage: 3, threshold: 1600, name: "銀賞：情侶慢跑鞋乙雙", icon: "👟", image: PRIZE_IMAGE_3, message: "什麼？ 我承認你有點超出預料，運動甜心之後穿上這雙鞋一起去跑步吧" },
   { stage: 4, threshold: 2800, name: "金賞：台東九天八夜之旅機加酒", icon: "✈️", image: PRIZE_IMAGE_4, message: "哇 太猛了吧！！ 看來我們的回憶你都有記得 獎品就是一起再創造更多回憶吧💕" },
-  { stage: 5, threshold: 4000, name: "大獎：同居邀請函", icon: "💌", image: "", message: "恭喜你獲得最終大獎，不知道重試了幾次，但妳還是堅持了下來，謝謝妳的堅持，未來也不要忘記妳填的答案喔" },
+  { stage: 5, threshold: 3500, name: "大獎：同居邀請函", icon: "💌", image: "", message: "恭喜你獲得最終大獎，不知道重試了幾次，但妳還是堅持了下來，謝謝妳的堅持，未來也不要忘記妳填的答案喔" },
 ];
 
 const RETRY_CONDITIONS = [
-  "回答真心誠意的答案後，可以重試本輪答錯的題目。",
+  "以下問題的回答讓出題者滿意的話，可以重試本輪答錯的題目。",
 ];
 
 const RETRY_GATE_QUESTIONS = [

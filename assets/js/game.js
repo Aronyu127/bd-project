@@ -20,9 +20,9 @@ const CHARACTER_STATES = {
 
 function getStreakBonus(streak) {
   if (streak <= 1) return 0;
-  if (streak === 2) return 50;
-  if (streak === 3) return 100;
-  return 150;
+  if (streak === 2) return 30;
+  if (streak === 3) return 60;
+  return 90;
 }
 
 function makeInitialState() {
@@ -50,6 +50,7 @@ function makeInitialState() {
 
 let gameState = makeInitialState();
 const audioSystem = createAudioSystem();
+let feedbackHideTimer = null;
 
 // ===================================================
 // 工具函式
@@ -308,6 +309,10 @@ function loadQuestion() {
   const q = QUESTIONS[qIdx];
   gameState.isAnswered = false;
   clearInterval(gameState.timerInterval);
+  if (document.activeElement && document.activeElement.classList && document.activeElement.classList.contains("option-btn")) {
+    document.activeElement.blur();
+  }
+  document.querySelectorAll(".option-btn").forEach((btn) => btn.blur());
 
   updateSidebar();
   updateQuestionProgressBar();
@@ -373,7 +378,15 @@ function loadQuestion() {
     btn.classList.add("option-enter");
   });
 
-  $("feedback-area").style.display = "none";
+  const fbArea = $("feedback-area");
+  if (fbArea) {
+    fbArea.style.display = "none";
+    fbArea.classList.remove("flash-show", "flash-hide");
+  }
+  if (feedbackHideTimer) {
+    clearTimeout(feedbackHideTimer);
+    feedbackHideTimer = null;
+  }
 }
 
 // ===================================================
@@ -560,32 +573,61 @@ function updateOptionVisual(selectedIdx, correctIdx, isTimeout) {
 
 function showFeedback(isCorrect, isTimeout, base, bonus, customText) {
   const fbArea = $("feedback-area");
+  if (!fbArea) return;
+  if (feedbackHideTimer) {
+    clearTimeout(feedbackHideTimer);
+    feedbackHideTimer = null;
+  }
   fbArea.style.display = "flex";
+  fbArea.classList.remove("feedback-correct", "feedback-wrong", "feedback-timeout");
+  fbArea.classList.remove("flash-hide");
+  fbArea.classList.add("flash-show");
 
   if (customText) {
+    fbArea.classList.add(isCorrect ? "feedback-correct" : "feedback-wrong");
     $("feedback-icon").textContent = isCorrect ? "✅" : "⚠️";
     $("feedback-text").textContent = customText;
     $("feedback-score").textContent = "";
     $("feedback-streak").textContent = "";
+    feedbackHideTimer = setTimeout(() => {
+      fbArea.classList.remove("flash-show");
+      fbArea.classList.add("flash-hide");
+      setTimeout(() => {
+        fbArea.style.display = "none";
+        fbArea.classList.remove("flash-hide");
+      }, 220);
+    }, 1400);
     return;
   }
 
   if (isTimeout) {
+    fbArea.classList.add("feedback-timeout");
     $("feedback-icon").textContent = "⌛";
     $("feedback-text").textContent = "時間到了！沒關係，繼續加油！";
     $("feedback-score").textContent = "+0 分";
     $("feedback-streak").textContent = "";
   } else if (isCorrect) {
+    fbArea.classList.add("feedback-correct");
     $("feedback-icon").textContent = "✨";
     $("feedback-text").textContent = "答對了！好厲害！";
     $("feedback-score").textContent = `+${base} 分`;
     $("feedback-streak").textContent = bonus > 0 ? `🔥 連擊加成 +${bonus}！` : "";
   } else {
+    fbArea.classList.add("feedback-wrong");
     $("feedback-icon").textContent = "💔";
     $("feedback-text").textContent = "答錯了... 沒關係！";
     $("feedback-score").textContent = "+0 分";
     $("feedback-streak").textContent = "";
   }
+
+  feedbackHideTimer = setTimeout(() => {
+    fbArea.classList.remove("flash-show");
+    fbArea.classList.add("flash-hide");
+    setTimeout(() => {
+      fbArea.style.display = "none";
+      fbArea.classList.remove("flash-hide");
+    }, 220);
+  }, 1400);
 }
 
 // ===================================================
@@ -866,7 +908,7 @@ function endGame() {
         });
       }
       if (retryToggleBtn) {
-        retryToggleBtn.textContent = "哭了 我好想要剩下的獎品";
+        retryToggleBtn.textContent = "哭了  有些題目沒答對 但其他獎品也好想要";
       }
     } else {
       retryPanel.style.display = "none";
@@ -1018,7 +1060,7 @@ if (retryToggleBtn) {
     const content = $("result-retry-content");
     if (!panel) return;
     const expanded = panel.classList.toggle("expanded");
-    this.textContent = expanded ? "好像也沒那麼想要了" : "哭了 我好想要剩下的獎品";
+    this.textContent = expanded ? "好像也沒那麼想要了" : "哭了  有些題目沒答對 但其他獎品也好想要";
     if (expanded && content) {
       setTimeout(() => {
         content.scrollIntoView({ behavior: "smooth", block: "start" });
