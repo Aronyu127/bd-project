@@ -5,15 +5,15 @@
 const START_QUESTIONS = [
   {
     question: "🕰️ 過去｜我們第一次一起看煙火的地方？",
-    answer: "",
-    // answer: "秀朗追風河濱公園",          // 不分大小寫、允許前後空白
+    // answer: "",
+    answer: "秀朗追風河濱公園",          // 不分大小寫、允許前後空白
     placeholder: "????????",
     errorMsg: "答錯囉，再想想 可以參考google map 的名稱",
   },
   {
     question: "📍 現在｜4/30當天的住宿地點是?",
-    answer: "",
-    // answer: "凱撒趣淘漫旅-台南",           // 答案格式需與 placeholder 一致
+    // answer: "",
+    answer: "凱撒趣淘漫旅-台南",           // 答案格式需與 placeholder 一致
     placeholder: "??????-??",
     errorMsg: "答錯囉，再想想 附近有個水庫喔",
   },
@@ -35,14 +35,14 @@ const QUESTIONS = [
   },
   {
     id: 2,
-    text: "最會做披薩的小高，食材也堆得小高的的餐廳是在?",
+    text: "把食材堆的小高的小高，做披薩的餐廳是在哪?",
     image: "assets/images/questions/q02-q40.jpg",
     options: ["Hotel Green Plaza Hakuba", "Hotel Monterey Hakuba", "Hotel Choya", "Hotel Hoshino Resort Hakuba"],
     answer: 0,
   },
   {
     id: 3,
-    text: "我們一起在巴厘島便利商店買的神秘飲料，喝起來的口感最像什麼？",
+    text: "我們一起在巴厘島便利商店買的神秘飲料，喝起來的口感有點像什麼飲料？",
     image: "assets/images/questions/q03-q40.jpg",
     options: ["可樂", "紅茶", "綠茶", "奶茶"],
     answer: 1,
@@ -56,7 +56,7 @@ const QUESTIONS = [
   },
   {
     id: 5,
-    text: "第一次帶珠寶一起看大型的喜劇演出，當時我們看的表演是？",
+    text: "第一次帶珠寶一起看大型的喜劇演出，當時我們看的表演名稱是？",
     image: 'assets/images/questions/q05-q40.jpg',
     options: ["炎上王世堅", "炎上炎亞倫", "炎上曾博恩", "炎上煉獄杏壽郎"],
     answer: 2,
@@ -70,21 +70,21 @@ const QUESTIONS = [
   },
   {
     id: 7,
-    text: "第一次跟珠寶一起玩雷射槍戰，那天的日期是？",
+    text: "第一次跟珠寶一起玩雷射槍戰，還一起並列第一名！那天的日期是？",
     image: "assets/images/questions/q07-q40.jpg",
     options: ["2025/12/25", "2025/12/26", "2025/12/27", "2025/12/28"],
     answer: 2,
   },
   {
     id: 8,
-    text: "在飯店慶祝時巧遇喜劇大師，請問這間飯店是哪間?",
+    text: "我們一起在飯店慶祝時巧遇偶像，請問這間飯店是哪間?",
     image: "assets/images/questions/q08-q40.jpg",
     options: ["大倉久和飯店", "晶華酒店", "凱悅酒店", "喜來登酒店"],
     answer: 0,
   },
   {
     id: 9,
-    text: "喜歡牛奶的人，這天吃喝得很開心，請問這天我們去哪裡玩?",
+    text: "喜歡牛奶的人，在這間店吃喝得很開心，這間店位在?",
     image: "assets/images/questions/q09-q40.jpg",
     options: ["宮古島", "石垣島", "沖繩", "鹿兒島"],
     answer: 1,
@@ -98,7 +98,7 @@ const QUESTIONS = [
   },
   {
     id: 11,
-    text: "萬聖節一起扮成中文怪物，請問參賽者美食高左手拿的是什麼食物?",
+    text: "萬聖節我們一起扮成中文怪物，請問美食高左手拿的是什麼食物?",
     image: "assets/images/questions/q11-q40.jpg",
     options: ["蘋果", "包子", "蘿蔔糕", "柚子"],
     answer: 3,
@@ -126,14 +126,14 @@ const QUESTIONS = [
   },
   {
     id: 15,
-    text: "TBW來看知性高開場，這天是幾月幾號？",
+    text: "TBW來看我寶貝開場，這天是幾月幾號？",
     image: "assets/images/questions/q15-q40.jpg",
     options: ["2025/09/01", "2025/09/02", "2025/09/03", "2025/09/04"],
     answer: 3,
   },
   {
     id: 16,
-    text: "收到花很開心的人，請問這張照片的拍攝地點是在台北哪區？",
+    text: "收到花很開心的人，請問這張照片的拍攝地點是在台北哪區的餐廳？",
     image: "assets/images/questions/q16-q40.jpg",
     options: ["新店", "大安", "內湖", "信義"],
     answer: 1,
@@ -156,7 +156,7 @@ const QUESTIONS = [
     id: 19,
     text: "去太平山莊遇到道路崩塌，為什麼我們這天在崩塌之前沒有來得及去走步道呢？",
     image: "assets/images/questions/q19-q40.jpg",
-    options: ["下雨", "太累", "走了別的道", "本來就沒有規劃步道行程"],
+    options: ["下雨☔️", "太累😩", "先走了別的道🤭", "本來就沒有規劃步道行程🤔"],
     answer: 2,
   },
   {
@@ -182,11 +182,11 @@ const PRIZE_IMAGE_4 = "assets/images/gift/gift-4-q40.jpg";
 const PRIZE_IMAGE_5 = "assets/images/gift/gift-5-q40.jpg";
 
 const PRIZES = [
-  { stage: 1, threshold: 350, name: "參加獎：滑雪版套乙組", icon: "🎿", image: PRIZE_IMAGE_1, message: "恭喜你獲得 “預料之中的參加獎”，獎品好像似曾相似，畢竟是預料中的嘛😉" },
-  { stage: 2, threshold: 900, name: "銅賞：台南之旅延長一天", icon: "🧳", image: PRIZE_IMAGE_2, message: "唉呦 還可以嘛，幫你加碼台南之旅升級多一天" },
-  { stage: 3, threshold: 1600, name: "銀賞：情侶慢跑鞋乙雙", icon: "👟", image: PRIZE_IMAGE_3, message: "什麼？ 我承認你有點超出預料，運動甜心之後穿上這雙鞋一起去跑步吧" },
-  { stage: 4, threshold: 2800, name: "金賞：台東九天八夜之旅機加酒", icon: "✈️", image: PRIZE_IMAGE_4, message: "哇 太猛了吧！！ 看來我們的回憶你都有記得 獎品就是一起再創造更多回憶吧💕" },
-  { stage: 5, threshold: 3500, name: "大獎：同居邀請函", icon: "💌", image: "", message: "恭喜你獲得最終大獎，不知道重試了幾次，但妳還是堅持了下來，謝謝妳的堅持，未來也不要忘記妳填的答案喔" },
+  { stage: 1, threshold: 350, name: "參加獎：滑雪版套乙組", icon: "🎿", image: PRIZE_IMAGE_1, message: "恭喜你獲得 “預料之中的參加獎”，獎品好像有點眼熟，畢竟都是預料中的嘛" },
+  { stage: 2, threshold: 900, name: "銅賞：台南之旅延長一天", icon: "🧳", image: PRIZE_IMAGE_2, message: "唉呦 還可以嘛，恭喜獲得 台南之旅升級多一天" },
+  { stage: 3, threshold: 1600, name: "銀賞：情侶慢跑鞋乙雙", icon: "👟", image: PRIZE_IMAGE_3, message: "什麼？ 我承認你有點超出預料，運動甜心之後我們一起穿上這雙鞋去跑步吧" },
+  { stage: 4, threshold: 2800, name: "金賞：台東九天八夜之旅機加酒", icon: "✈️", image: PRIZE_IMAGE_4, message: "哇 太猛了吧！！ 看來我們的回憶你都有記得 獎品就是帶你一起再創造更多回憶💕" },
+  { stage: 5, threshold: 3500, name: "大獎：同居邀請函", icon: "💌", image: "", message: "恭喜你獲得最終大獎，第一次挑戰沒成功，還有第二次，謝謝妳的努力，以後也要記得你的回答呦😉" },
 ];
 
 const RETRY_CONDITIONS = [
@@ -195,15 +195,15 @@ const RETRY_CONDITIONS = [
 
 const RETRY_GATE_QUESTIONS = [
   {
-    question: "在未來的日子裡，你願意跟我一起為不吵架而努力，並且在吵架時願意先停一下，深呼吸三口氣後一起好好溝通嗎？",
+    question: "在未來的日子裡，你願意跟我一起為了不吵架而努力，並且在吵架時願意先停一下，深呼吸三口氣後一起好好溝通嗎？",
     answer: "我願意",
     placeholder: "我願意",
     errorMsg: "😢",
   },
   {
-    question: "當吵架發生時，如果有一方已經願意道歉並且提出解決方式，另ㄧ方也要提出自己可以做更好的地方，讓我們一起努力更好，好嗎？",
-    answer: "好",
-    placeholder: "好",
+    question: "當吵架發生時，不論對錯，在雙方僵持不下時，為了雙方好，也願意偶而放下面子先低頭道歉，一起維護我們的感情嗎",
+    answer: "我願意",
+    placeholder: "我願意",
     errorMsg: "😢",
   },
 ];
@@ -214,9 +214,10 @@ const GRAND_PRIZE_LETTER = {
   subtitle: "To Karen, with all my love",
   content: `嗨，這封信是我想親手交給妳的邀請。
 
-謝謝妳陪我走過每一段日常、每一次旅行，也謝謝妳一直都在。
-如果妳願意，我想邀請妳和我一起，把未來的平凡日子變成我們的小冒險。
+謝謝妳陪我走過每一段日常、每一次旅行，也謝謝即使怎樣吵吵鬧鬧，妳也一直都在。
+相信我們可以一起變得更好。可以一起克服困難，一起成長。
+如果妳願意，我想邀請妳和我一起，把未來的平凡日子變成我們的小冒險，一起創造更多回憶。
 
-妳願意收下這份邀請，跟我一起開始一起生活嗎？`,
+妳願意收下這份邀請，跟我一起開始新的同居生活嗎？`,
   sign: "Aron",
 };
